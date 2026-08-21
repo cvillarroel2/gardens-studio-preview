@@ -816,6 +816,39 @@
     '</section>';
   }
 
+  // Desktop: as a left card is pushed up past its pin line, its content
+  // DISSOLVES across a soft band at the line instead of shearing mid-glyph
+  // against the header's bottom edge. A scroll-driven gradient mask on the
+  // card itself: everything above the pin line is already transparent by the
+  // time it slides under the header.
+  function wireCardFade() {
+    if (window.matchMedia('(max-width: 720px)').matches) return;
+    var blocks = document.querySelectorAll('#info-space .lblock');
+    if (!blocks.length) return;
+    var pin = parseFloat(getComputedStyle(blocks[0]).top) || 162;
+    var ticking = false;
+    function apply() {
+      ticking = false;
+      for (var i = 0; i < blocks.length; i++) {
+        var d = pin - blocks[i].getBoundingClientRect().top;
+        if (d > 0.5) {
+          var m = 'linear-gradient(to bottom, transparent ' + (d - 8).toFixed(0) +
+            'px, #000 ' + (d + 56).toFixed(0) + 'px)';
+          blocks[i].style.webkitMaskImage = m;
+          blocks[i].style.maskImage = m;
+        } else if (blocks[i].style.maskImage) {
+          blocks[i].style.webkitMaskImage = '';
+          blocks[i].style.maskImage = '';
+        }
+      }
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(apply); }
+    }, { passive: true });
+    window.addEventListener('resize', apply, { passive: true });
+    apply();
+  }
+
   function buildInfo() {
     var header = document.getElementById('infoHeader');
     var host = document.getElementById('infoBody');
@@ -825,6 +858,8 @@
         mobileCycHero() + spaceSection() +
         mobilePiano() + equipmentSection() + contactSection();
     }
+
+    wireCardFade();
 
     var toTop = document.getElementById('toTop');
     if (toTop) toTop.addEventListener('click', onHomeClick);
