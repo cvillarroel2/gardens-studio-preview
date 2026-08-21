@@ -567,15 +567,27 @@
   var S = 'assets/studio/';
 
   // A full-size, uncropped image for a right column (natural aspect ratio — no
-  // object-fit, no fixed-height frame).
+  // object-fit, no fixed-height frame). Every image carries its INTRINSIC
+  // width/height attributes: without them a lazy image has no box (renders at
+  // width x 0), which both jumps the layout and — observed on iPhone — can
+  // leave the loader stuck at complete:false. The attributes reserve the
+  // correct aspect box up front (CSS width:100%; height:auto scales it).
+  var IMG_DIMS = {
+    'arcade': [2400, 1601], 'cyc-2': [2000, 1334], 'cyclorama': [2400, 1601],
+    'green-2': [1000, 1500], 'green-room': [1334, 2000], 'lounge': [2400, 1601],
+    'lounge-2': [2000, 1334], 'piano-hall': [2400, 1601], 'vanity-2': [2000, 1334]
+  };
   function imgTag(slug, alt, eager) {
-    return '<img src="' + S + slug + '.jpg" alt="Gardens Studio — ' + alt +
-      '" loading="' + (eager ? 'eager' : 'lazy') + '" decoding="async">';
+    var d = IMG_DIMS[slug];
+    return '<img src="' + S + slug + '.jpg" alt="Gardens Studio — ' + alt + '"' +
+      (d ? ' width="' + d[0] + '" height="' + d[1] + '"' : '') +
+      ' loading="' + (eager ? 'eager' : 'lazy') + '" decoding="async">';
   }
   function rightImages(list) {
     return '<div class="main-right">' + list.map(function (im, i) {
-      // The stack's lead image is what greets the reveal — never lazy-load it.
-      return imgTag(im[0], im[1], i === 0);
+      // The stack's lead image greets the reveal — never lazy-load it; an
+      // entry can also force eager itself (im[2]) for the phone sequence.
+      return imgTag(im[0], im[1], i === 0 || !!im[2]);
     }).join('') + '</div>';
   }
 
@@ -711,7 +723,7 @@
   }
   function mobilePiano() {
     return '<div class="mobile-piano">' +
-      imgTag('piano-hall', 'the working end and the grand piano') + '</div>';
+      imgTag('piano-hall', 'the working end and the grand piano', true) + '</div>';
   }
 
   function spaceSection() {
@@ -735,7 +747,7 @@
     }).join('') + '</ul>';
     return section('info-features', '02', 'Amenities', list, rightImages([
       ['green-room', 'the green room'],
-      ['green-2', 'the green room, styled']
+      ['green-2', 'the green room, styled', true]   // in the phone sequence — eager
     ]));
   }
 
