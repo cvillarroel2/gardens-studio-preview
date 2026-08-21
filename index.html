@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gardens Studio</title>
+<meta name="description" content="Gardens Studio — an experimental photographic studio. One room, grown from a thousand flowers; scroll, and the wind carries the title away to reveal the studio.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="data:,">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+
+<!-- ground theme: chosen ground applied before first paint (no flash). -->
+<script src="variants.js?v=2"></script>
+<script src="variant-boot.js?v=2"></script>
+<script src="ground-boot.js?v=8"></script>
+<script src="font-boot.js"></script>
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="scroll.css?v=32">
+<link rel="stylesheet" href="fonts/fonts-extra.css">
+<link rel="stylesheet" href="typefaces.css">
+<!-- Home title: GARDENS over studio, stacked, in a squarer frame (same as the
+     hash-routed home). garden.js reads this to grow the living title on load. -->
+<script src="preview-config.js?v=2?v=7"></script>
+</head>
+<body>
+<a class="skip" href="#info-space">skip to the studio</a>
+
+<!-- The living title — ONE instance, fixed at the centre of the hero. It blooms
+     out of the ground on load, is carried off by the wind as you scroll down,
+     and re-plants + blooms again when you scroll back to the top. -->
+<div class="title-wrap" id="title">
+  <div id="banner" role="img" aria-label="Gardens Studio — a living flower title.">
+    <canvas id="shadows"></canvas>
+    <canvas id="scene"></canvas>
+  </div>
+  <h1 class="sr-only">Gardens Studio</h1>
+</div>
+
+<!-- Wind gust overlay — flowing streamlines drawn while the title blows away. -->
+<div class="wind" id="wind" aria-hidden="true">
+  <svg class="wind-svg" id="windSvg" preserveAspectRatio="none"></svg>
+</div>
+
+<!-- HERO — a zero-height anchor holding the scroll cue. Scroll input is captured
+     (the page doesn't scroll natively yet): it lifts the fixed title and stirs
+     its flowers, then blows it away, revealing the studio doc below in place. -->
+<section class="hero" id="top" aria-label="Gardens Studio">
+  <span class="scroll-cue" id="cue" aria-hidden="true">
+    <span class="scroll-cue-label">Scroll</span>
+    <span class="scroll-cue-key">&darr;</span>
+  </span>
+</section>
+
+<!-- THE STUDIO — a satspace.ltd-style scroll. A static header band sits at the
+     very top (it scrolls away with the page): wordmark / contact / numbered nav.
+     Below it, each section is a flex row — a sticky LEFT text column beside a
+     RIGHT column of full-size, uncropped images that flow past it. Contact closes
+     full-width. Built by scroll.js. Revealed after the blow-away (header first,
+     then the body a beat later); you scroll straight into it as one page. -->
+<main class="info-doc" id="infoDoc">
+  <header class="info-header" id="infoHeader"></header>
+  <div class="info-body" id="infoBody"></div>
+</main>
+
+<script type="module" src="garden.js?v=30"></script>
+<script src="scroll.js?v=7"></script>
+<script src="theme.js?v=9"></script>
+<script src="variant-pick.js?v=2"></script>
+<script src="font-pick.js"></script>
+</body>
+</html>

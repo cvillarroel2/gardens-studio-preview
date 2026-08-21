@@ -1,0 +1,244 @@
+{
+ "anem_p": {
+  "emission_strength": 0.09,
+  "roughness": 0.55,
+  "grad_range": [
+   0.0,
+   0.28,
+   0.0,
+   1.0
+  ],
+  "colorA": "#e7ddfc",
+  "colorB": "#ad81ea",
+  "val_range": [
+   0.0,
+   1.0,
+   0.92,
+   1.08
+  ],
+  "hsv_sat": 1.0
+ },
+ "c_anem": {
+  "emission_strength": 0.1,
+  "roughness": 0.5,
+  "colorA": "#4b3f59",
+  "colorB": "#765990"
+ },
+ "c_daisy": {
+  "emission_strength": 0.25,
+  "roughness": 0.5,
+  "colorA": "#ffe789",
+  "colorB": "#eac461"
+ },
+ "c_fmn": {
+  "emission_strength": 0.25,
+  "roughness": 0.5,
+  "colorA": "#fff9bc",
+  "colorB": "#f3fff9"
+ },
+ "c_poppy": {
+  "emission_strength": 0.1,
+  "roughness": 0.5,
+  "colorA": "#ddeac4",
+  "colorB": "#a061aa"
+ },
+ "c_rose": {
+  "emission_strength": 0.2,
+  "roughness": 0.5,
+  "colorA": "#e56fa2",
+  "colorB": "#bc4581"
+ },
+ "c_sun": {
+  "emission_strength": 0.15,
+  "roughness": 0.5,
+  "colorA": "#654527",
+  "colorB": "#f9ce61"
+ },
+ "daisy_p": {
+  "emission_strength": 0.1,
+  "roughness": 0.55,
+  "grad_range": [
+   0.0,
+   0.34,
+   0.0,
+   1.0
+  ],
+  "colorA": "#feefc4",
+  "colorB": "#fffef9",
+  "val_range": [
+   0.0,
+   1.0,
+   0.92,
+   1.08
+  ],
+  "hsv_sat": 1.0
+ },
+ "fmn_p": {
+  "emission_strength": 0.08,
+  "roughness": 0.55,
+  "grad_range": [
+   0.0,
+   0.22,
+   0.0,
+   1.0
+  ],
+  "colorA": "#cbddfe",
+  "colorB": "#90b3f6",
+  "val_range": [
+   0.0,
+   1.0,
+   0.92,
+   1.08
+  ],
+  "hsv_sat": 1.0
+ },
+ "ground": {
+  "emission_strength": 0.0,
+  "roughness": 1.0
+ },
+ "leaf_m": {
+  "emission_strength": 0.0,
+  "roughness": 0.55,
+  "grad_range": [
+   0.0,
+   0.3,
+   0.0,
+   1.0
+  ],
+  "colorA": "#7cb376",
+  "colorB": "#b3e1a0",
+  "val_range": [
+   0.0,
+   1.0,
+   0.92,
+   1.08
+  ],
+  "hsv_sat": 1.0
+ },
+ "poppy_p": {
+  "emission_strength": 0.12,
+  "roughness": 0.55,
+  "grad_range": [
+   0.0,
+   0.3,
+   0.0,
+   1.0
+  ],
+  "colorA": "#612730",
+  "colorB": "#f1553f",
+  "val_range": [
+   0.0,
+   1.0,
+   0.92,
+   1.08
+  ],
+  "hsv_sat": 1.0
+ },
+ "rose_p": {
+  "emission_strength": 0.12,
+  "roughness": 0.55,
+  "grad_range": [
+   0.0,
+   0.26,
+   0.0,
+   1.0
+  ],
+  "colorA": "#dd5999",
+  "colorB": "#fdc4d7",
+  "val_range": [
+   0.0,
+   1.0,
+   0.92,
+   1.08
+  ],
+  "hsv_sat": 1.0
+ },
+ "stam_m": {
+  "emission_strength": 0.0,
+  "roughness": 0.4
+ },
+ "stamd_m": {
+  "emission_strength": 0.0,
+  "roughness": 0.5
+ },
+ "stem_m": {
+  "emission_strength": 0.0,
+  "roughness": 0.6
+ },
+ "sun_p": {
+  "emission_strength": 0.12,
+  "roughness": 0.55,
+  "grad_range": [
+   0.0,
+   0.32,
+   0.0,
+   1.0
+  ],
+  "colorA": "#f6bb48",
+  "colorB": "#ffea6d",
+  "val_range": [
+   0.0,
+   1.0,
+   0.92,
+   1.08
+  ],
+  "hsv_sat": 1.0
+ },
+ "tul_p": {
+  "emission_strength": 0.12,
+  "roughness": 0.55,
+  "grad_range": [
+   0.0,
+   0.28,
+   0.0,
+   1.0
+  ],
+  "colorA": "#ed89b3",
+  "colorB": "#fdd3e1",
+  "val_range": [
+   0.0,
+   1.0,
+   0.92,
+   1.08
+  ],
+  "hsv_sat": 1.0
+ },
+ "tul_r": {
+  "emission_strength": 0.12,
+  "roughness": 0.55,
+  "grad_range": [
+   0.0,
+   0.28,
+   0.0,
+   1.0
+  ],
+  "colorA": "#c42745",
+  "colorB": "#f96c76",
+  "val_range": [
+   0.0,
+   1.0,
+   0.92,
+   1.08
+  ],
+  "hsv_sat": 1.0
+ },
+ "tul_y": {
+  "emission_strength": 0.12,
+  "roughness": 0.55,
+  "grad_range": [
+   0.0,
+   0.28,
+   0.0,
+   1.0
+  ],
+  "colorA": "#f9bb55",
+  "colorB": "#ffef8c",
+  "val_range": [
+   0.0,
+   1.0,
+   0.92,
+   1.08
+  ],
+  "hsv_sat": 1.0
+ }
+}

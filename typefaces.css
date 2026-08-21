@@ -1,0 +1,51 @@
+/* Gardens Studio — TYPE SETS for the studio page.
+ *
+ * The site's typography runs through two tokens: --serif is the TITLE voice
+ * (header wordmark, section titles, the contact sign-off) and --mono is
+ * everything else (nav, labels, body copy, forms, the floor-plan lettering).
+ * Each set below re-points both tokens — a display face for titles and a
+ * legible workhorse for the rest — plus small per-set fitting (the grotesques
+ * need more weight than Fraunces' light 300). Faces are vendored in
+ * fonts/fonts-extra.css.
+ *
+ * The default (no attribute / "fraunces") is the shipped pair, untouched. */
+
+/* A7 — Bricolage Grotesque titles / Fragment Mono text.
+   The most character: a slightly hand-made grotesque that echoes the flower
+   wordmark's bounce, labelled in a fashion-forward Helvetica-turned-mono. */
+:root[data-typeface="bricolage"] {
+  --serif: "Bricolage Grotesque", "Fraunces", Georgia, serif;
+  --mono:  "Fragment Mono", "Space Mono", ui-monospace, monospace;
+}
+[data-typeface="bricolage"] .hmark-word { font-weight: 500; }
+[data-typeface="bricolage"] .sec-title,
+[data-typeface="bricolage"] .done-note { font-weight: 500; letter-spacing: -0.015em; }
+
+/* A9 — Funnel Display titles / Space Mono text.
+   Tight display sans with character in the titles. The text slot stays on
+   the shipped Space Mono: a proportional sans there re-resolved every
+   ch-based measure (46ch columns, label tracking) and shifted the page's
+   spacing between sets — the mono keeps the layout identical. */
+:root[data-typeface="funnel"] {
+  --serif: "Funnel Display", "Fraunces", Georgia, serif;
+}
+[data-typeface="funnel"] .hmark-word { font-weight: 500; }
+[data-typeface="funnel"] .sec-title,
+[data-typeface="funnel"] .done-note { font-weight: 500; letter-spacing: -0.01em; }
+
+/* ---- picker chrome ---- */
+/* The type sets are about the STUDIO DOCUMENT, not the flower title — so the
+   picker is the inverse of the palette/ground pickers: hidden on the hero,
+   fading in only once the studio stages in (body.revealed). It sits in the
+   bottom-left gutter, stacked above the paper-tuner chip, on a soft paper
+   chip so it stays legible over the doc. */
+.type-pick {
+  top: auto; bottom: 52px;
+  padding: 6px 8px 7px 4px;
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
+  backdrop-filter: blur(2px);
+  opacity: 0; visibility: hidden; pointer-events: none;
+}
+body.revealed .type-pick {
+  opacity: 1; visibility: visible; pointer-events: auto;
+}

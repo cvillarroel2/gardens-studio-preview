@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gardens Studio — font candidates</title>
+<meta name="robots" content="noindex, nofollow">
+<!-- RESEARCH PAGE ONLY: loads candidates from Google Fonts, so no strict CSP
+     here (the site pages keep theirs; a chosen font would be vendored like
+     Fraunces/Space Mono before shipping). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500&family=Heebo:wght@300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400&family=Geist:wght@300..700&family=Schibsted+Grotesk:wght@400..900&family=Bricolage+Grotesque:opsz,wght@12..96,300..700&family=Archivo:wdth,wght@62..125,300..700&family=Hanken+Grotesk:wght@300..700&family=Funnel+Sans:wght@300..700&family=Funnel+Display:wght@300..700&family=IBM+Plex+Mono:wght@300;400;500&family=JetBrains+Mono:wght@300..600&family=Geist+Mono:wght@300..600&family=Martian+Mono:wght@300..600&family=Fragment+Mono&family=Space+Mono:wght@400;700&family=Fraunces:opsz,wght@9..144,300..600&display=swap">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  :root {
+    --paper: #f1ebe0; --ink: #211c16; --muted: #8a8073; --faint: #b4aa98;
+    --hair: #ddd3c2; --poppy: #c73a1d;
+    --mono: "Space Mono", ui-monospace, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--paper); color: var(--ink); padding: clamp(18px, 4vw, 64px); }
+  .kicker { font: 400 10px/1 var(--mono); letter-spacing: .22em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 10px; }
+  h1 { font: 500 clamp(22px, 3vw, 34px)/1.2 "Fraunces", serif; margin-bottom: 6px; }
+  .note { font: 400 12px/1.7 var(--mono); color: var(--muted); max-width: 68ch; margin-bottom: 8px; }
+  .note a { color: inherit; }
+  .group { margin-top: clamp(36px, 5vw, 64px); border-top: 1px solid var(--ink); padding-top: 10px; }
+  .group > .kicker { color: var(--ink); }
+  .cand { border-top: 1px solid var(--hair); padding: clamp(20px, 3vw, 34px) 0; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: baseline; margin-bottom: 14px; }
+  .idx { font: 400 10px/1 var(--mono); color: var(--poppy); letter-spacing: .1em; }
+  .name { font: 400 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+  .why { font: 400 11px/1.6 var(--mono); color: var(--muted); max-width: 72ch; }
+  .big { font-size: clamp(34px, 6.5vw, 84px); line-height: 1.02; letter-spacing: -0.01em;
+    margin: 2px 0 14px; overflow-wrap: anywhere; }
+  .navrow { font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 12px; }
+  .navrow b { color: var(--ink); font-weight: 500; }
+  .body { font-size: 15px; line-height: 1.65; max-width: 62ch; color: var(--ink); }
+  .mono-s .big { font-size: clamp(22px, 3.6vw, 44px); letter-spacing: 0; }
+  .mono-s .body { font-size: 13px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<p class="kicker">Gardens Studio — type research · 2026-08-21</p>
+<h1>Font candidates with a modern energy</h1>
+<p class="note">Reference: satspace.ltd actually ships Heebo + IBM Plex Sans / Plex Mono /
+Plex Condensed (pulled from their live Webflow CSS, not guessed from screenshots).
+That system reads modern because it is engineered: one quiet grotesque doing the talking,
+a technical mono doing the labelling, nothing decorative. Current Gardens pair for
+comparison: Fraunces (serif) + Space Mono. Every candidate below is on Google Fonts, so
+any pick can be vendored locally the same way.</p>
+<p class="note">Each specimen: header voice → nav/label voice → body copy from the site.</p>
+
+<div class="group">
+<p class="kicker">A — headline &amp; body sans (the site voice)</p>
+
+<div class="cand"><div class="meta"><span class="idx">A1</span><span class="name">Space Grotesk</span>
+<span class="why">the sibling of Space Mono you already ship — same skeleton, so the mono captions and a grotesque headline read as ONE family. The lowest-risk way to go modern without losing the site's voice.</span></div>
+<div class="big" style="font-family:'Space Grotesk';font-weight:500">Gardens Studio</div>
+<div class="navrow" style="font-family:'Space Grotesk'"><b>01 The Space</b> · 02 Features · 03 Floor Plan · 04 Equipment · 05 Contact</div>
+<p class="body" style="font-family:'Space Grotesk';font-weight:300">Gardens Studio is a single high room at the north edge of the city. There is only ever one space to book — but over the course of a day it behaves like a dozen.</p></div>
+
+<div class="cand"><div class="meta"><span class="idx">A2</span><span class="name">IBM Plex Sans (+ Condensed)</span>
+<span class="why">the literal satspace system. Neutral, engineered, quietly warm. Condensed makes strong all-caps nav rows.</span></div>
+<div class="big" style="font-family:'IBM Plex Sans';font-weight:500">Gardens Studio</div>
+<div class="navrow" style="font-family:'IBM Plex Sans Condensed';font-weight:500"><b>01 The Space</b> · 02 Features · 03 Floor Plan · 04 Equipment · 05 Contact</div>
+<p class="body" style="font-family:'IBM Plex Sans';font-weight:300">Gardens Studio is a single high room at the north edge of the city. There is only ever one space to book — but over the course of a day it behaves like a dozen.</p></div>
+
+<div class="cand"><div class="meta"><span class="idx">A3</span><span class="name">Heebo</span>
+<span class="why">satspace's primary voice. Rounder and friendlier than Plex — modern without feeling cold, which suits a flower-led brand.</span></div>
+<div class="big" style="font-family:'Heebo';font-weight:500">Gardens Studio</div>
+<div class="navrow" style="font-family:'Heebo'"><b>01 The Space</b> · 02 Features · 03 Floor Plan · 04 Equipment · 05 Contact</div>
+<p class="body" style="font-family:'Heebo';font-weight:300">Gardens Studio is a single high room at the north edge of the city. There is only ever one space to book — but over the course of a day it behaves like a dozen.</p></div>
+
+<div class="cand"><div class="meta"><span class="idx">A4</span><span class="name">Instrument Sans</span>
+<span class="why">the current studio-portfolio grotesque — crisp with small humanist warmth. Very 2025-26 without being a trend costume.</span></div>
+<div class="big" style="font-family:'Instrument Sans';font-weight:500">Gardens Studio</div>
+<div class="navrow" style="font-family:'Instrument Sans'"><b>01 The Space</b> · 02 Features · 03 Floor Plan · 04 Equipment · 05 Contact</div>
+<p class="body" style="font-family:'Instrument Sans'">Gardens Studio is a single high room at the north edge of the city. There is only ever one space to book — but over the course of a day it behaves like a dozen.</p></div>
+
+<div class="cand"><div class="meta"><span class="idx">A5</span><span class="name">Geist</span>
+<span class="why">the sharpest "tech-modern" of the set (Vercel's typeface). Cool and precise; pairs naturally with Geist Mono below.</span></div>
+<div class="big" style="font-family:'Geist';font-weight:500">Gardens Studio</div>
+<div class="navrow" style="font-family:'Geist'"><b>01 The Space</b> · 02 Features · 03 Floor Plan · 04 Equipment · 05 Contact</div>
+<p class="body" style="font-family:'Geist';font-weight:300">Gardens Studio is a single high room at the north edge of the city. There is only ever one space to book — but over the course of a day it behaves like a dozen.</p></div>
+
+<div class="cand"><div class="meta"><span class="idx">A6</span><span class="name">Schibsted Grotesk</span>
+<span class="why">editorial-modern with a little attitude in the curves — more personality than Plex/Heebo at display sizes.</span></div>
+<div class="big" style="font-family:'Schibsted Grotesk';font-weight:500">Gardens Studio</div>
+<div class="navrow" style="font-family:'Schibsted Grotesk'"><b>01 The Space</b> · 02 Features · 03 Floor Plan · 04 Equipment · 05 Contact</div>
+<p class="body" style="font-family:'Schibsted Grotesk'">Gardens Studio is a single high room at the north edge of the city. There is only ever one space to book — but over the course of a day it behaves like a dozen.</p></div>
+
+<div class="cand"><div class="meta"><span class="idx">A7</span><span class="name">Bricolage Grotesque</span>
+<span class="why">the most character of the grotesques — slightly hand-made irregularity that echoes the flower wordmark's bounce. The most-installed new sans of the past two years.</span></div>
+<div class="big" style="font-family:'Bricolage Grotesque';font-weight:500">Gardens Studio</div>
+<div class="navrow" style="font-family:'Bricolage Grotesque'"><b>01 The Space</b> · 02 Features · 03 Floor Plan · 04 Equipment · 05 Contact</div>
+<p class="body" style="font-family:'Bricolage Grotesque';font-weight:300">Gardens Studio is a single high room at the north edge of the city. There is only ever one space to book — but over the course of a day it behaves like a dozen.</p></div>
+
+<div class="cand"><div class="meta"><span class="idx">A8</span><span class="name">Archivo (variable width)</span>
+<span class="why">punchy grotesque with a width axis — headlines can stretch expanded for poster energy while body stays normal.</span></div>
+<div class="big" style="font-family:'Archivo';font-weight:600;font-stretch:115%">Gardens Studio</div>
+<div class="navrow" style="font-family:'Archivo'"><b>01 The Space</b> · 02 Features · 03 Floor Plan · 04 Equipment · 05 Contact</div>
+<p class="body" style="font-family:'Archivo';font-weight:300">Gardens Studio is a single high room at the north edge of the city. There is only ever one space to book — but over the course of a day it behaves like a dozen.</p></div>
+
+<div class="cand"><div class="meta"><span class="idx">A9</span><span class="name">Funnel Display + Funnel Sans</span>
+<span class="why">new 2025 pair with real momentum — tight display sans with character, quietly excellent text weights.</span></div>
+<div class="big" style="font-family:'Funnel Display';font-weight:500">Gardens Studio</div>
+<div class="navrow" style="font-family:'Funnel Sans'"><b>01 The Space</b> · 02 Features · 03 Floor Plan · 04 Equipment · 05 Contact</div>
+<p class="body" style="font-family:'Funnel Sans';font-weight:300">Gardens Studio is a single high room at the north edge of the city. There is only ever one space to book — but over the course of a day it behaves like a dozen.</p></div>
+
+<div class="cand"><div class="meta"><span class="idx">A10</span><span class="name">Hanken Grotesk</span>
+<span class="why">the soft "bouba" workhorse — warmest of the grotesques, safest for long body copy.</span></div>
+<div class="big" style="font-family:'Hanken Grotesk';font-weight:500">Gardens Studio</div>
+<div class="navrow" style="font-family:'Hanken Grotesk'"><b>01 The Space</b> · 02 Features · 03 Floor Plan · 04 Equipment · 05 Contact</div>
+<p class="body" style="font-family:'Hanken Grotesk';font-weight:300">Gardens Studio is a single high room at the north edge of the city. There is only ever one space to book — but over the course of a day it behaves like a dozen.</p></div>
+</div>
+
+<div class="group">
+<p class="kicker">B — mono (labels, nav, captions — the satspace "technical" layer)</p>
+
+<div class="cand mono-s"><div class="meta"><span class="idx">B0</span><span class="name">Space Mono — current</span>
+<span class="why">what ships today. Baseline for comparison.</span></div>
+<div class="big" style="font-family:'Space Mono'">Gardens Studio</div>
+<p class="body" style="font-family:'Space Mono'">01 THE SPACE · SCROLL ↓ · HI@GARDENSORLANDO.COM — one volume, drawn to give you the shape of it.</p></div>
+
+<div class="cand mono-s"><div class="meta"><span class="idx">B1</span><span class="name">IBM Plex Mono</span>
+<span class="why">satspace's exact label voice. Softer detailing than Space Mono, reads engineered rather than retro.</span></div>
+<div class="big" style="font-family:'IBM Plex Mono'">Gardens Studio</div>
+<p class="body" style="font-family:'IBM Plex Mono'">01 THE SPACE · SCROLL ↓ · HI@GARDENSORLANDO.COM — one volume, drawn to give you the shape of it.</p></div>
+
+<div class="cand mono-s"><div class="meta"><span class="idx">B2</span><span class="name">Fragment Mono</span>
+<span class="why">Helvetica-turned-mono — the most fashion-forward of these; very current in studio branding.</span></div>
+<div class="big" style="font-family:'Fragment Mono'">Gardens Studio</div>
+<p class="body" style="font-family:'Fragment Mono'">01 THE SPACE · SCROLL ↓ · HI@GARDENSORLANDO.COM — one volume, drawn to give you the shape of it.</p></div>
+
+<div class="cand mono-s"><div class="meta"><span class="idx">B3</span><span class="name">Geist Mono</span>
+<span class="why">clean tech mono, pairs with Geist (A5) as a ready-made system.</span></div>
+<div class="big" style="font-family:'Geist Mono'">Gardens Studio</div>
+<p class="body" style="font-family:'Geist Mono'">01 THE SPACE · SCROLL ↓ · HI@GARDENSORLANDO.COM — one volume, drawn to give you the shape of it.</p></div>
+
+<div class="cand mono-s"><div class="meta"><span class="idx">B4</span><span class="name">JetBrains Mono</span>
+<span class="why">taller x-height, very legible small — good if the mono stays tiny (10-11px labels).</span></div>
+<div class="big" style="font-family:'JetBrains Mono'">Gardens Studio</div>
+<p class="body" style="font-family:'JetBrains Mono'">01 THE SPACE · SCROLL ↓ · HI@GARDENSORLANDO.COM — one volume, drawn to give you the shape of it.</p></div>
+
+<div class="cand mono-s"><div class="meta"><span class="idx">B5</span><span class="name">Martian Mono</span>
+<span class="why">wide, display-leaning mono — the most "sci-fi" option; strong in all-caps headers, heavy for body.</span></div>
+<div class="big" style="font-family:'Martian Mono';font-weight:400">Gardens Studio</div>
+<p class="body" style="font-family:'Martian Mono';font-weight:300">01 THE SPACE · SCROLL ↓ · HI@GARDENSORLANDO.COM — one volume, drawn to give you the shape of it.</p></div>
+</div>
+
+<div class="group">
+<p class="kicker">C — pairings to try first</p>
+<p class="note">1 · Space Grotesk + Space Mono — modern headline, zero change to the label voice, one family.
+2 · Heebo + IBM Plex Mono — the closest to satspace's actual energy.
+3 · Bricolage Grotesque + Fragment Mono — the most character; echoes the flower title's bounce.
+4 · Geist + Geist Mono — the coldest/most technical; try it against the Bright palette.
+Fraunces can stay as an accent (the wordmark row in the header) under any of these.</p>
+</div>
+</body>
+</html>

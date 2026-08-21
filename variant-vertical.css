@@ -1,0 +1,12 @@
+/* VERTICAL WORDMARK PAGE. Loaded after scroll.css: the banner goes tall-
+   portrait for the two upright letter columns (block aspect ~0.287).
+   max-height deliberately not set — scroll.css's 82vh/74vh rules stay. */
+#banner {
+  aspect-ratio: 0.285 / 1;
+  /* width bows to the height budget so the tall frame is never clamped flat
+     (which would slice the top and bottom letters off — see scroll.css) */
+  width: min(240px, 70vw, calc(82vh * 0.285));
+}
+@media (max-width: 720px) {
+  #banner { width: min(240px, 70vw, calc(74vh * 0.285)); }
+}
