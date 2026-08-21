@@ -262,6 +262,9 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   margin: 0; text-wrap: balance;
 }
 .sec-head-sub { margin-top: clamp(30px, 4vw, 54px); }
+/* Desktop: Amenities RESTS well below The Space (a transform set by
+   scroll.js's wireSpaceShift — not margin, so the sticky column's height is
+   untouched); the scroll-linked shift closes the distance. */
 .sec-copy { max-width: 46ch; }
 .sec-copy p { font: 400 15px/1.85 var(--mono); color: var(--ink); margin: 0 0 1.15em; }
 .sec-copy p:last-child { margin-bottom: 0; }

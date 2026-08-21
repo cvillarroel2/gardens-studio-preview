@@ -820,16 +820,23 @@
     var inner = sec.querySelector('.main-left-inner');
     var head = sec.querySelector('.sec-head');
     var intro = sec.querySelector('.space-intro-wrap');
+    var amen = sec.querySelector('.amen-block');
     var imgs = sec.querySelectorAll('.main-right img');
-    if (!inner || !head || !intro || imgs.length < 2) return;
+    if (!inner || !head || !intro || !amen || imgs.length < 2) return;
     var ticking = false;
     function apply() {
       ticking = false;
       var trigger = imgs[1].getBoundingClientRect().top;
       var range = head.offsetHeight + intro.offsetHeight + 40;   // intro fully out
       var t = Math.max(0, Math.min(1, -trigger / range));
+      // Amenities RESTS a long way below the intro and the scroll closes the
+      // distance, the two meeting just as the intro finishes riding out. The
+      // gap is a pure transform (not margin), so the sticky column's height —
+      // and where it un-pins at the section's end — are untouched.
+      var gap = Math.round(window.innerHeight * 0.42);
       inner.style.transform = t > 0
         ? 'translateY(' + (-t * range).toFixed(1) + 'px)' : '';
+      amen.style.transform = 'translateY(' + ((1 - t) * gap).toFixed(1) + 'px)';
     }
     window.addEventListener('scroll', function () {
       if (!ticking) { ticking = true; requestAnimationFrame(apply); }
