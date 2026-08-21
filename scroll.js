@@ -737,18 +737,18 @@
       '<p>Gardens Studio is a single high room at the north edge of the city — one space to book that behaves like a dozen across a day. Nothing is fixed but the walls: the cove drops from the ceiling, furniture rides on castors, the windows black out in about a minute. A shape, not a set — a place you finish yourself.</p>' +
       '<p class="ph-note">Placeholder text — final copy to come.</p>' +
       '</div>';
-    var amen = '<header class="sec-head sec-head-sub" id="info-features">' +
+    var amen = '<div class="amen-block">' +
+      '<header class="sec-head sec-head-sub" id="info-features">' +
       '<h2 class="sec-title">Amenities</h2></header>' +
       '<ul class="sec-list">' + FEATURES.map(function (f) {
         return '<li>' + f + '</li>';
-      }).join('') + '</ul>';
-    return section('info-space', '01', 'The space', copy + amen, rightImages([
+      }).join('') + '</ul></div>';
+    return section('info-space', '01', 'The space',
+      '<div class="space-intro-wrap">' + copy + '</div>' + amen, rightImages([
       ['cyclorama', 'the cyc wall', false, 'mob-hide'],
       ['lounge-2', 'the lounge', false, 'mob-hide'],
       ['arcade', 'the arcade run', false, 'mob-hide'],
       ['vanity', 'the dressing room', false, 'mob-hide'],
-      ['green-room', 'the green room', true],
-      ['green-2', 'the green room, styled', true],
       ['workroom', 'the work area', true]
     ]));
   }
@@ -767,16 +767,17 @@
 
   // 04 EQUIPMENT — sticky-left heading only; the category lists fill the right
   // column as a two-column grid (satspace's exact convention for this section).
+  // EQUIPMENT — the kit list rides the sticky LEFT column under the heading;
+  // the piano photo is the right column (phones keep their own piano block
+  // above the heading instead — .equip-photo hides there).
   function equipmentSection() {
     var grid = '<div class="kit-grid">' + KIT.map(function (c) {
       return '<div class="kit-cat"><h3>' + c[0] + '</h3><ul>' +
         c[1].map(function (i) { return '<li>' + i + '</li>'; }).join('') + '</ul></div>';
     }).join('') + '</div>';
-    var right = '<div class="main-right main-right-kit">' +
-      '<div class="equip-piano">' +
-        imgTag('piano-hall', 'the working end and the grand piano') + '</div>' +
-      grid + '</div>';
-    return section('info-equipment', '04', 'Equipment', '', right);
+    var right = '<div class="main-right equip-photo">' +
+      imgTag('piano-hall', 'the working end and the grand piano') + '</div>';
+    return section('info-equipment', '04', 'Equipment', grid, right);
   }
 
   // 05 CONTACT — a full-width close: the contact grid, CTAs, the design-study
@@ -807,6 +808,36 @@
     '</section>';
   }
 
+  // Desktop only: after the Space section's SECOND photo reaches the top of
+  // the viewport, the pinned left column starts scrolling with the page — the
+  // intro (heading + text block) rides up out of view and Amenities settles
+  // where it stood. Driven 1:1 by scroll (a transform on the sticky inner),
+  // fully reversible, and inert on phones where the column isn't pinned.
+  function wireSpaceShift() {
+    if (window.matchMedia('(max-width: 720px)').matches) return;
+    var sec = document.getElementById('info-space');
+    if (!sec) return;
+    var inner = sec.querySelector('.main-left-inner');
+    var head = sec.querySelector('.sec-head');
+    var intro = sec.querySelector('.space-intro-wrap');
+    var imgs = sec.querySelectorAll('.main-right img');
+    if (!inner || !head || !intro || imgs.length < 2) return;
+    var ticking = false;
+    function apply() {
+      ticking = false;
+      var trigger = imgs[1].getBoundingClientRect().top;
+      var range = head.offsetHeight + intro.offsetHeight + 40;   // intro fully out
+      var t = Math.max(0, Math.min(1, -trigger / range));
+      inner.style.transform = t > 0
+        ? 'translateY(' + (-t * range).toFixed(1) + 'px)' : '';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(apply); }
+    }, { passive: true });
+    window.addEventListener('resize', apply, { passive: true });
+    apply();
+  }
+
   function buildInfo() {
     var header = document.getElementById('infoHeader');
     var host = document.getElementById('infoBody');
@@ -816,6 +847,8 @@
         mobileCycHero() + spaceSection() + planSection() +
         mobilePiano() + equipmentSection() + contactSection();
     }
+
+    wireSpaceShift();
 
     var toTop = document.getElementById('toTop');
     if (toTop) toTop.addEventListener('click', onHomeClick);

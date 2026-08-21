@@ -469,7 +469,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   .main-right .mob-hide { display: none; }
   /* The piano sits immediately above the Equipment heading (its desktop
      home inside the kit column hides here so it never shows twice). */
-  .equip-piano { display: none; }
+  .equip-photo { display: none; }
   .mobile-piano { display: block; }
   .mobile-piano img { width: 100%; height: auto; display: block; }
   .mobile-piano + .main { margin-top: clamp(20px, 6vw, 30px); }
