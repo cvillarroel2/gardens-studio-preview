@@ -247,6 +247,12 @@ const BLOOM_DUR = 0.75;         // s — each flower's grow duration
 const BLOOM_JITTER = 0.18;      // s — random start jitter
 
 const HAND_RADIUS = 0.55;       // world radius of the "hand" itself
+// TOUCH boost — a fingertip is fatter, faster-moving relative to the small
+// framed field, and partly hidden under the hand, so on touch pointers the
+// brush responds harder and reaches further. Mouse input is untouched: with
+// hand.isTouch false both terms collapse to the shipped desktop behaviour.
+const TOUCH_GAIN = 1.7;         // × on push / drag / strike amplitudes for touch
+const TOUCH_REACH = 0.55;       // extra world reach around the fingertip
 const SUB_DT = 1 / 60;          // s — physics substep
 const MAX_FRAME_DT = 0.2;       // s — total simulated time per frame, capped
 
@@ -1479,7 +1485,7 @@ buildGrid();
 
 const liveSet = new Set();
 function wakeNear(x0, z0, x1, z1) {
-  const pad = 2.4; // >= max reach (0.45 + 0.62·maxSc + HAND_RADIUS ≈ 2.32)
+  const pad = 3.0; // >= max reach (0.45 + 0.62·maxSc + HAND_RADIUS ≈ 2.32) + TOUCH_REACH
   const minX = Math.floor((Math.min(x0, x1) - pad) / CELL);
   const maxX = Math.floor((Math.max(x0, x1) + pad) / CELL);
   const minZ = Math.floor((Math.min(z0, z1) - pad) / CELL);
@@ -1541,6 +1547,7 @@ window.addEventListener('pointermove', (e) => {
     try { samples = e.getCoalescedEvents(); } catch { samples = null; }
   }
   if (!samples || samples.length === 0) samples = [e];
+  hand.isTouch = e.pointerType === 'touch';
   for (let i = 0; i < samples.length; i++) {
     const s = samples[i];
     if (!groundFromClient(s.clientX, s.clientY)) continue;
@@ -1639,6 +1646,7 @@ window.addEventListener('pointerdown', (e) => {
   hand.prevV = 0; hand.peakV = 0; hand.accS = 0; hand.vSm = 0;
   hand.lastSampleT = rawTs / 1000;
   hand.active = true;
+  hand.isTouch = e.pointerType === 'touch';
   hand.lastMove = performance.now() / 1000;
   wakeNear(hand.x, hand.z, hand.x, hand.z);
   startLoop();
@@ -1873,8 +1881,10 @@ function tick() {
   // drag (follow) stays on the brush curve alone so a slow creep never tows
   // flowers along.
   const handResp = brushResponse(speed);
-  const pushAmp = PUSH_MAX * handResp + PUSH_LOW * partResponse(speed);
-  const dragAmp = DRAG_MAX * handResp;
+  const tGain = hand.isTouch ? TOUCH_GAIN : 1;          // finger hits harder
+  const reachX = hand.isTouch ? TOUCH_REACH : 0;        // and reaches further
+  const pushAmp = (PUSH_MAX * handResp + PUSH_LOW * partResponse(speed)) * tGain;
+  const dragAmp = DRAG_MAX * handResp * tGain;
 
   // ---- swept-path impulse channel ----
   // The hand's travel since the last physics tick is the POLYLINE of real
@@ -1916,7 +1926,8 @@ function tick() {
       // one-frame pass and a forty-frame pass deposit the same total kick.
       // Scaled by the ONE shared brush curve only: a creep whispers, every
       // step up in speed lands a clearly harder knock, a whip saturates.
-      const kick = KICK_GAIN * brushResponse(effSpeed) * accBoost;
+      const kick = KICK_GAIN * brushResponse(effSpeed) * accBoost *
+        (hand.isTouch ? TOUCH_GAIN : 1);
       if (!(kick > 1e-4) || !Number.isFinite(kick)) continue;
       const pieces = Math.min(80, Math.max(1, Math.ceil(s.len / SEG_MAX_LEN)));
       if (pieces === 1) {
@@ -1952,8 +1963,9 @@ function tick() {
       if (handOn) {
         const dx = r.x - hand.x, dz = r.z - hand.z;
         const d = Math.hypot(dx, dz);
-        if (d < r.reach) {
-          const w = 1 - d / r.reach;
+        const rrP = r.reach + reachX;
+        if (d < rrP) {
+          const w = 1 - d / rrP;
           const fall = w * Math.sqrt(w);
           // (1) quasi-static push — proximity-proportional lean away from the
           // hand + gentle drag along its travel, scaled by the brush curve
@@ -1988,15 +2000,16 @@ function tick() {
         if (tSeg < 0) tSeg = 0; else if (tSeg > s.len) tSeg = s.len;
         const cx = rx - s.ux * tSeg, cz = rz - s.uz * tSeg;
         const dSeg = Math.hypot(cx, cz);
-        if (dSeg < r.reach) {
-          const wS = 1 - dSeg / r.reach;
+        const rrS = r.reach + reachX;
+        if (dSeg < rrS) {
+          const wS = 1 - dSeg / rrS;
           // strike falloff is FLATTER than the push falloff (near-linear in w
           // with a floor, vs w^1.5): a fast strike entrains air and brushes
           // the whole corridor it sweeps, so even rim flowers get a reliable
           // (if small) knock. The floor is spatially continuous because the
           // chord factor below already takes dv to zero at the disc edge.
           const fallS = 0.35 + 0.65 * wS;
-          const chord = 2 * Math.sqrt(r.reach * r.reach - dSeg * dSeg);
+          const chord = 2 * Math.sqrt(rrS * rrS - dSeg * dSeg);
           const dv = s.kick * fallS * Math.min(s.len, chord);
           r.vx += s.ux * dv;
           r.vz += s.uz * dv;

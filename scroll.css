@@ -276,6 +276,12 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
 
 /* Floor plan rides the right column — drawn on paper, legend beneath. */
 .main-right-plan { gap: clamp(16px, 2vw, 24px); }
+
+/* ---- Mobile-only content blocks (see scroll.js mobileCycHero/mobilePiano).
+   Hidden on desktop; the spacing rule keeps the section rhythm intact even
+   though the (hidden) piano div sits between two .main sections. ---- */
+.mobile-hero-cyc, .mobile-piano { display: none; }
+.mobile-piano + .main { margin-top: clamp(48px, 13vw, 78px); }
 .plan-figure { margin: 0; }
 .plan-figure .floorplan { width: 100%; height: auto; max-width: 100%; margin: 0 0 clamp(16px, 2vw, 22px); }
 
@@ -429,6 +435,26 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   .sec-copy, .sec-list { max-width: none; }
   .kit-grid { grid-template-columns: 1fr; }
   .plan-figure .floorplan { max-width: 560px; }
+
+  /* The phone read opens on the cyc wall, bled to all four corners of the
+     viewport: full width via the negative side pull out of .info-body's
+     padding, full height via 100svh, covered (cropped) — never letterboxed. */
+  .mobile-hero-cyc {
+    display: block;
+    width: 100vw; height: 100vh; height: 100svh;
+    margin: calc(0px - clamp(46px, 8vh, 96px)) 0 clamp(48px, 13vw, 78px)
+            calc(50% - 50vw);
+  }
+  .mobile-hero-cyc img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  /* The Space keeps only its heading + the single text block on phones — the
+     cyc opener replaces its photo stack (desktop keeps all five). */
+  #info-space .main-right { display: none; }
+  /* The piano sits immediately above the Equipment heading. */
+  .mobile-piano { display: block; }
+  .mobile-piano img { width: 100%; height: auto; display: block; }
+  .mobile-piano + .main { margin-top: clamp(20px, 6vw, 30px); }
 
 }
 

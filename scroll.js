@@ -283,16 +283,50 @@
     }
   }
 
+  // --- touch on the hero: GESTURE-COUNTED advance -------------------------
+  // On a phone a swipe is a discrete statement, not a scroll distance. The
+  // desktop wheel/trackpad keeps the distance-scrubbed advance() below, but a
+  // finger works in whole swipes: the FIRST deliberate downward swipe lifts
+  // the title to its held halfway point (visibly acknowledged), the SECOND
+  // sends it to the wind — never a third. "Deliberate" is a short net-travel
+  // threshold (TSWIPE_MIN), so accidental brushes neither count nor stick:
+  // an under-threshold drag eases back to the last committed stop. A
+  // deliberate UPWARD swipe resets the count and lowers the title.
+  var TSWIPE_MIN = 55;         // px net downward travel that makes a swipe count
+  var TSWIPE_FEEL = 300;       // px over which the pre-threshold live lift builds
+  var tswipe = { count: 0, dist: 0, done: false };
   var touch = { on: false, y: 0 };
   function onTouchStart(e) {
     touch.on = true; touch.y = e.touches[0].clientY;
+    tswipe.dist = 0; tswipe.done = false;
     resetGesture();                   // a fresh finger is a fresh gesture
   }
   function onTouchMove(e) {
     if (!touch.on) return;
     var y = e.touches[0].clientY, delta = touch.y - y;   // finger up => delta > 0 (scroll down)
     touch.y = y;
-    if (mode === 'hero') { e.preventDefault(); advance(delta); }
+    if (mode === 'hero') {
+      e.preventDefault();
+      if (reduceMQ.matches) { if (delta > 0) startBlow(); return; }
+      if (transitioning) return;
+      tswipe.dist += delta;
+      stir(delta);                    // the flowers feel the swipe as before
+      if (tswipe.done) return;        // one touch counts at most once
+      if (tswipe.dist >= TSWIPE_MIN) {
+        tswipe.done = true;
+        tswipe.count++;
+        if (tswipe.count >= 2) { tswipe.count = 0; p = 1; startBlow(); return; }
+        p = 0.5; scheduleEase();      // swipe 1 acknowledged: the title holds halfway
+      } else if (tswipe.dist <= -TSWIPE_MIN) {
+        tswipe.done = true;
+        tswipe.count = 0;             // deliberate up-swipe: stand down
+        p = 0; scheduleEase();
+      } else {
+        // pre-threshold live feedback: the held title follows the finger
+        p = clamp(tswipe.count * 0.5 + Math.max(0, tswipe.dist) / TSWIPE_FEEL * 0.35, 0, 0.98);
+        scheduleEase();
+      }
+    }
     else if (transitioning || mode === 'blowing' || mode === 'growing') { e.preventDefault(); }
     else if (mode === 'doc') {
       if ((window.scrollY || window.pageYOffset || 0) <= 0 && delta < 0) {
@@ -302,7 +336,13 @@
       }
     }
   }
-  function onTouchEnd() { touch.on = false; }
+  function onTouchEnd() {
+    touch.on = false;
+    // an under-threshold drag was only feedback — settle back on the last stop
+    if (mode === 'hero' && !tswipe.done && !transitioning && !reduceMQ.matches) {
+      p = tswipe.count * 0.5; scheduleEase();
+    }
+  }
 
   function onKey(e) {
     if (mode === 'hero' && !transitioning) {
@@ -430,6 +470,7 @@
       if (done) return; done = true;
       mode = 'hero';
       transitioning = false;
+      tswipe.count = 0;               // regrown title: the two-swipe count restarts
     }
 
     whenGarden(function () {
@@ -659,11 +700,24 @@
   // ---- The sections -------------------------------------------------------
   // 01 THE SPACE — sticky-left summary + room narrative beside a stack of five
   // full-size, uncropped photos that flow past the pinned text.
+  // MOBILE-ONLY blocks (hidden on desktop via scroll.css). The phone read
+  // opens on the cyc wall bleeding to all four corners of the viewport, and
+  // the piano photo sits immediately above the Equipment heading. The Space
+  // section's own photo stack is hidden on phones (the cyc opener replaces
+  // it); desktop keeps the full five-image stack.
+  function mobileCycHero() {
+    return '<div class="mobile-hero-cyc">' +
+      imgTag('cyclorama', 'the cyc wall', true) + '</div>';
+  }
+  function mobilePiano() {
+    return '<div class="mobile-piano">' +
+      imgTag('piano-hall', 'the working end and the grand piano') + '</div>';
+  }
+
   function spaceSection() {
+    // ONE unified block (2026-08-21): the same copy, no paragraph breaks.
     var copy = '<div class="sec-copy">' +
-      '<p>Gardens Studio is a single high room at the north edge of the city. There is only ever one space to book — but over the course of a day it behaves like a dozen. Early light makes it a still-life table; by afternoon it is a sound stage; after dark it closes into a clean white void.</p>' +
-      '<p>We built it that way on purpose. Instead of a warren of little sets, the studio is one generous volume you arrange to the shoot in front of you — roll the cove down, wheel the piano in, black the windows out, or let the north light do all the work.</p>' +
-      '<p>Nothing here is fixed but the walls. Furniture rides on castors, the cove drops from the ceiling, and the windows take blackout in about a minute — what you get is a shape, not a set, a place you finish yourself.</p>' +
+      '<p>Gardens Studio is a single high room at the north edge of the city. There is only ever one space to book — but over the course of a day it behaves like a dozen. Early light makes it a still-life table; by afternoon it is a sound stage; after dark it closes into a clean white void. We built it that way on purpose. Instead of a warren of little sets, the studio is one generous volume you arrange to the shoot in front of you — roll the cove down, wheel the piano in, black the windows out, or let the north light do all the work. Nothing here is fixed but the walls. Furniture rides on castors, the cove drops from the ceiling, and the windows take blackout in about a minute — what you get is a shape, not a set, a place you finish yourself.</p>' +
       '</div>';
     return section('info-space', '01', 'The space', copy, rightImages([
       ['cyclorama', 'the cyc wall'],
@@ -739,7 +793,8 @@
     if (header) header.innerHTML = headerHtml();
     if (host) {
       host.innerHTML =
-        spaceSection() + featuresSection() + planSection() + equipmentSection() + contactSection();
+        mobileCycHero() + spaceSection() + featuresSection() + planSection() +
+        mobilePiano() + equipmentSection() + contactSection();
     }
 
     var toTop = document.getElementById('toTop');
