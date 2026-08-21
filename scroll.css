@@ -407,7 +407,15 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   /* Header collapses (satspace convention): the wordmark box goes full-width with
      a Menu toggle; the contact rows are hidden; the nav grid drops open below
      when Menu is tapped. */
-  .info-header { flex-direction: column; padding: clamp(16px, 6vw, 26px) clamp(16px, 5vw, 26px) clamp(10px, 3vw, 16px); }
+  /* The phone header OVERLAYS the page instead of occupying flow space, so
+     the cyc opener below can own the viewport from y=0. A translucent paper
+     scrim + blur keeps the wordmark and Menu legible over the photograph. */
+  .info-header {
+    position: fixed; top: 0; left: 0; right: 0;
+    flex-direction: column; padding: clamp(16px, 6vw, 26px) clamp(16px, 5vw, 26px) clamp(10px, 3vw, 16px);
+    background: color-mix(in srgb, var(--paper) 74%, transparent);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  }
   /* In the column header, size each box to its own content (the row-mode
      flex bases of 0 would otherwise collapse the box heights). */
   .hbox { min-height: 0; flex: 0 0 auto; }
@@ -441,7 +449,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
      padding, full height via 100svh, covered (cropped) — never letterboxed. */
   .mobile-hero-cyc {
     display: block;
-    width: 100vw; height: 100vh; height: 100svh;
+    width: 100vw; height: 100vh; height: 100dvh;
     margin: calc(0px - clamp(46px, 8vh, 96px)) 0 clamp(48px, 13vw, 78px)
             calc(50% - 50vw);
   }
