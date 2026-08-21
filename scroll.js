@@ -742,15 +742,27 @@
       '<ul class="sec-list">' + FEATURES.map(function (f) {
         return '<li>' + f + '</li>';
       }).join('') + '</ul></div>';
-    return section('info-space', '01', 'The space',
-      '<div class="space-intro-wrap">' + copy + '</div>' + amen + planBlock(),
-      rightImages([
-        ['cyclorama', 'the cyc wall', false, 'mob-hide'],
-        ['lounge-2', 'the lounge', false, 'mob-hide'],
-        ['arcade', 'the arcade run', false, 'mob-hide'],
-        ['vanity', 'the dressing room', false, 'mob-hide'],
-        ['workroom', 'the work area', true]
-      ]));
+    // Hand-built section (not section()): the left column is a train of
+    // sticky SEGMENTS. Each block rides up, sticks below the header, and
+    // holds until the next block catches up and pushes it away — The Space,
+    // then Amenities, then the floor plan (which holds to the section's end).
+    var right = rightImages([
+      ['cyclorama', 'the cyc wall', false, 'mob-hide'],   // the phone's full-bleed opener already shows the cove
+      ['lounge-2', 'the lounge'],
+      ['arcade', 'the arcade run'],
+      ['vanity', 'the dressing room'],
+      ['workroom', 'the work area', true]
+    ]);
+    return '<section class="main" id="info-space">' +
+      '<div class="main-left"><div class="main-left-inner">' +
+        '<div class="lseg"><div class="lblock">' +
+          '<header class="sec-head"><h2 class="sec-title">The space</h2></header>' +
+          '<div class="space-intro-wrap">' + copy + '</div></div></div>' +
+        '<div class="lseg"><div class="lblock">' + amen + '</div></div>' +
+        '<div class="lseg seg-plan"><div class="lblock">' + planBlock() + '</div></div>' +
+      '</div></div>' +
+      right +
+    '</section>';
   }
 
   // FLOOR PLAN — no heading, no text: the drawing itself sits in the merged
