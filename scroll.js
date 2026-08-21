@@ -804,33 +804,6 @@
     '</section>';
   }
 
-  // Desktop: the left column is NOT hard-pinned — like satspace it drifts
-  // gently with the section, moving a small fraction of the page's scroll so
-  // it reads as flowing with the photos. The drift also carries the stack's
-  // below-the-fold tail (the floor plan's bottom) into view by section end.
-  function wireSpaceDrift() {
-    if (window.matchMedia('(max-width: 720px)').matches) return;
-    var sec = document.getElementById('info-space');
-    if (!sec) return;
-    var inner = sec.querySelector('.main-left-inner');
-    if (!inner) return;
-    var ticking = false;
-    function apply() {
-      ticking = false;
-      var r = sec.getBoundingClientRect();
-      var span = Math.max(1, r.height - window.innerHeight);
-      var p = Math.max(0, Math.min(1, -r.top / span));
-      var need = Math.max(0, inner.offsetHeight - (window.innerHeight - 162 - 24));
-      var drift = need + 70;                      // overflow + a breath of parallax
-      inner.style.transform = 'translateY(' + (-p * drift).toFixed(1) + 'px)';
-    }
-    window.addEventListener('scroll', function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(apply); }
-    }, { passive: true });
-    window.addEventListener('resize', apply, { passive: true });
-    apply();
-  }
-
   function buildInfo() {
     var header = document.getElementById('infoHeader');
     var host = document.getElementById('infoBody');
@@ -840,8 +813,6 @@
         mobileCycHero() + spaceSection() +
         mobilePiano() + equipmentSection() + contactSection();
     }
-
-    wireSpaceDrift();
 
     var toTop = document.getElementById('toTop');
     if (toTop) toTop.addEventListener('click', onHomeClick);
