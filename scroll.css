@@ -281,6 +281,15 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
 /* Floor plan rides the right column — drawn on paper, legend beneath. */
 .main-right-plan { gap: clamp(16px, 2vw, 24px); }
 
+/* Floor plan inside the merged section: the left heading is desktop-only
+   (it drifts in under Amenities); phones get the heading with the drawing. */
+.plan-mobile-head { display: none; }
+.plan-wrap { margin-top: clamp(20px, 2.4vw, 34px); }
+@media (max-width: 720px) {
+  .plan-block { display: none; }
+  .plan-mobile-head { display: block; margin-top: 0; margin-bottom: clamp(16px, 4vw, 24px); }
+}
+
 /* A quiet flag on content that is not final: placeholder copy / drawings. */
 .ph-note {
   margin: 14px 0 0; font: 400 10px/1.6 var(--mono);
