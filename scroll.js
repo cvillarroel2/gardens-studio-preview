@@ -743,34 +743,25 @@
       '<ul class="sec-list">' + FEATURES.map(function (f) {
         return '<li>' + f + '</li>';
       }).join('') + '</ul></div>';
-    var pb = planBlocks();
-    var right = rightImages([
-      ['cyclorama', 'the cyc wall', false, 'mob-hide'],
-      ['lounge-2', 'the lounge', false, 'mob-hide'],
-      ['arcade', 'the arcade run', false, 'mob-hide'],
-      ['vanity', 'the dressing room', false, 'mob-hide'],
-      ['workroom', 'the work area', true]
-    ]);
-    right = right.replace('</div>', pb.figure + '</div>');   // drawing closes the flow
     return section('info-space', '01', 'The space',
-      '<div class="space-intro-wrap">' + copy + '</div>' + amen + pb.head, right);
+      '<div class="space-intro-wrap">' + copy + '</div>' + amen + planBlock(),
+      rightImages([
+        ['cyclorama', 'the cyc wall', false, 'mob-hide'],
+        ['lounge-2', 'the lounge', false, 'mob-hide'],
+        ['arcade', 'the arcade run', false, 'mob-hide'],
+        ['vanity', 'the dressing room', false, 'mob-hide'],
+        ['workroom', 'the work area', true]
+      ]));
   }
 
-  // FLOOR PLAN — no text block any more. The heading lives in the merged
-  // section's left column (desktop; it drifts up to settle under Amenities —
-  // see wireSpaceShift), the drawing rides at the end of the right image
-  // flow, and on phones a heading travels with the drawing itself.
-  function planBlocks() {
-    return {
-      head: '<div class="plan-block">' +
-        '<header class="sec-head sec-head-sub"><h2 class="sec-title">Floor plan</h2></header></div>',
-      figure: '<div class="plan-wrap" id="info-plan">' +
-        '<header class="sec-head sec-head-sub plan-mobile-head">' +
-          '<h2 class="sec-title">Floor plan</h2></header>' +
-        '<figure class="plan-figure">' + floorPlan() + fpLegend() +
-        '<figcaption class="ph-note">Placeholder image — final floor plan to come.</figcaption>' +
-        '</figure></div>'
-    };
+  // FLOOR PLAN — no heading, no text: the drawing itself sits in the merged
+  // section's left column beneath Amenities (the header nav's "Floor Plan"
+  // link points at it).
+  function planBlock() {
+    return '<div class="plan-block" id="info-plan">' +
+      '<figure class="plan-figure">' + floorPlan() +
+      '<figcaption class="ph-note">Placeholder image — final floor plan to come.</figcaption>' +
+      '</figure></div>';
   }
 
   // 04 EQUIPMENT — sticky-left heading only; the category lists fill the right
@@ -816,56 +807,6 @@
     '</section>';
   }
 
-  // Desktop only: after the Space section's SECOND photo reaches the top of
-  // the viewport, the pinned left column starts scrolling with the page — the
-  // intro (heading + text block) rides up out of view and Amenities settles
-  // where it stood. Driven 1:1 by scroll (a transform on the sticky inner),
-  // fully reversible, and inert on phones where the column isn't pinned.
-  function wireSpaceShift() {
-    if (window.matchMedia('(max-width: 720px)').matches) return;
-    var sec = document.getElementById('info-space');
-    if (!sec) return;
-    var inner = sec.querySelector('.main-left-inner');
-    var head = sec.querySelector('.sec-head');
-    var intro = sec.querySelector('.space-intro-wrap');
-    var amen = sec.querySelector('.amen-block');
-    var plan = sec.querySelector('.plan-block');
-    var imgs = sec.querySelectorAll('.main-right img');
-    if (!inner || !head || !intro || !amen || imgs.length < 2) return;
-    var ticking = false;
-    function apply() {
-      ticking = false;
-      var trigger = imgs[1].getBoundingClientRect().top;
-      var range = head.offsetHeight + intro.offsetHeight + 40;   // intro fully out
-      var t = Math.max(0, Math.min(1, -trigger / range));
-      // Amenities RESTS a long way below the intro and drifts up GRADUALLY
-      // (satspace-style): its approach runs on its own, much longer progress —
-      // roughly a full viewport of scroll — so it eases in slowly rather than
-      // rushing the moment the intro starts to leave. Both are pure
-      // transforms (not margin), so the sticky column's height — and where it
-      // un-pins at the section's end — are untouched.
-      var gap = Math.round(window.innerHeight * 0.42);
-      var tA = Math.max(0, Math.min(1, -trigger / Math.max(600, window.innerHeight)));
-      inner.style.transform = t > 0
-        ? 'translateY(' + (-t * range).toFixed(1) + 'px)' : '';
-      amen.style.transform = 'translateY(' + ((1 - tA) * gap).toFixed(1) + 'px)';
-      // The floor-plan heading follows the same convention one beat later:
-      // it rests further down and starts drifting only once Amenities is
-      // half-way home, settling close beneath it.
-      if (plan) {
-        var gapP = Math.round(window.innerHeight * 0.85);
-        var tP = Math.max(0, Math.min(1,
-          (-trigger - window.innerHeight * 0.5) / (window.innerHeight * 1.1)));
-        plan.style.transform = 'translateY(' + ((1 - tP) * gapP).toFixed(1) + 'px)';
-      }
-    }
-    window.addEventListener('scroll', function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(apply); }
-    }, { passive: true });
-    window.addEventListener('resize', apply, { passive: true });
-    apply();
-  }
-
   function buildInfo() {
     var header = document.getElementById('infoHeader');
     var host = document.getElementById('infoBody');
@@ -875,8 +816,6 @@
         mobileCycHero() + spaceSection() +
         mobilePiano() + equipmentSection() + contactSection();
     }
-
-    wireSpaceShift();
 
     var toTop = document.getElementById('toTop');
     if (toTop) toTop.addEventListener('click', onHomeClick);
