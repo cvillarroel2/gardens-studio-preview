@@ -575,7 +575,8 @@
   var IMG_DIMS = {
     'arcade': [2400, 1601], 'cyc-2': [2000, 1334], 'cyclorama': [2400, 1601],
     'green-2': [1000, 1500], 'green-room': [1334, 2000], 'lounge': [2400, 1601],
-    'lounge-2': [2000, 1334], 'piano-hall': [2400, 1601], 'vanity-2': [2000, 1334]
+    'lounge-2': [2000, 1334], 'piano-hall': [2400, 1601], 'vanity': [2400, 1601],
+    'vanity-2': [2000, 1334], 'workroom': [2400, 1601]
   };
   function imgTag(slug, alt, eager, cls) {
     var d = IMG_DIMS[slug];
@@ -745,9 +746,10 @@
       ['cyclorama', 'the cyc wall', false, 'mob-hide'],
       ['lounge-2', 'the lounge', false, 'mob-hide'],
       ['arcade', 'the arcade run', false, 'mob-hide'],
-      ['vanity-2', 'the vanity, ringed with warm bulbs', false, 'mob-hide'],
+      ['vanity', 'the dressing room', false, 'mob-hide'],
       ['green-room', 'the green room', true],
-      ['green-2', 'the green room, styled', true]
+      ['green-2', 'the green room, styled', true],
+      ['workroom', 'the work area', true]
     ]));
   }
 
