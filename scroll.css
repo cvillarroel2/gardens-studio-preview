@@ -306,7 +306,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
      constrained to its containing block's CONTENT box, so padding gives it
      zero travel and it never pins. min-height = the block + its hold time. */
   #info-space .lseg { min-height: 66vh; }
-  #info-space .lseg .lblock { position: sticky; top: 162px; }
+  #info-space .lseg .lblock { position: sticky; top: 205px; }
   #info-space .seg-plan { flex: 1 1 auto; min-height: 0; }
   #info-space .sec-copy p { line-height: 1.65; }
   #info-space .sec-head-sub { margin-top: 0; }
