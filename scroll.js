@@ -596,7 +596,7 @@
   function section(id, idx, title, leftInner, right) {
     return '<section class="main" id="' + id + '">' +
       '<div class="main-left"><div class="main-left-inner">' +
-        '<header class="sec-head"><span class="sec-idx">' + idx + '</span>' +
+        '<header class="sec-head">' +
           '<h2 class="sec-title">' + title + '</h2></header>' +
         leftInner +
       '</div></div>' +
@@ -687,7 +687,7 @@
   function navCell(sec, n, t, full) {
     return '<a class="hnav-cell' + (full ? ' hnav-full' : '') +
       '" href="#' + sec + '" data-sec="' + sec + '">' +
-      '<span class="n">' + n + '</span><span class="t">' + t + '</span></a>';
+      '<span class="t">' + t + '</span></a>';
   }
   function headerHtml() {
     return '' +
@@ -730,13 +730,13 @@
     // ONE unified block (2026-08-21): the same copy, no paragraph breaks.
     var copy = '<div class="sec-copy">' +
       '<p>Gardens Studio is a single high room at the north edge of the city. There is only ever one space to book — but over the course of a day it behaves like a dozen. Early light makes it a still-life table; by afternoon it is a sound stage; after dark it closes into a clean white void. We built it that way on purpose. Instead of a warren of little sets, the studio is one generous volume you arrange to the shoot in front of you — roll the cove down, wheel the piano in, black the windows out, or let the north light do all the work. Nothing here is fixed but the walls. Furniture rides on castors, the cove drops from the ceiling, and the windows take blackout in about a minute — what you get is a shape, not a set, a place you finish yourself.</p>' +
+      '<p class="ph-note">Placeholder text — final copy to come.</p>' +
       '</div>';
     return section('info-space', '01', 'The space', copy, rightImages([
       ['cyclorama', 'the cyc wall'],
       ['lounge-2', 'the lounge'],
       ['arcade', 'the arcade run'],
-      ['vanity-2', 'the vanity, ringed with warm bulbs'],
-      ['piano-hall', 'the working end and the grand piano']
+      ['vanity-2', 'the vanity, ringed with warm bulbs']
     ]));
   }
 
@@ -754,9 +754,12 @@
   // 03 FLOOR PLAN — sticky-left heading + a short note; the drawn plan rides the
   // right column (legend beneath), the satspace convention of a plan-as-media.
   function planSection() {
-    var note = '<div class="sec-copy"><p>One volume, drawn to give you the shape of it — a 22′ × 14′ shooting wall down the west side, a clear span beneath a 14-foot ceiling, roughly 2,800 square feet in all. The soft rooms tuck into a row along the east wall; north light runs the whole way across the top.</p></div>';
+    var note = '<div class="sec-copy"><p>One volume, drawn to give you the shape of it — a 22′ × 14′ shooting wall down the west side, a clear span beneath a 14-foot ceiling, roughly 2,800 square feet in all. The soft rooms tuck into a row along the east wall; north light runs the whole way across the top.</p>' +
+      '<p class="ph-note">Placeholder text — final copy to come.</p></div>';
     var right = '<div class="main-right main-right-plan"><figure class="plan-figure">' +
-      floorPlan() + fpLegend() + '</figure></div>';
+      floorPlan() + fpLegend() +
+      '<figcaption class="ph-note">Placeholder image — final floor plan to come.</figcaption>' +
+      '</figure></div>';
     return section('info-plan', '03', 'Floor plan', note, right);
   }
 
@@ -767,7 +770,10 @@
       return '<div class="kit-cat"><h3>' + c[0] + '</h3><ul>' +
         c[1].map(function (i) { return '<li>' + i + '</li>'; }).join('') + '</ul></div>';
     }).join('') + '</div>';
-    var right = '<div class="main-right main-right-kit">' + grid + '</div>';
+    var right = '<div class="main-right main-right-kit">' +
+      '<div class="equip-piano">' +
+        imgTag('piano-hall', 'the working end and the grand piano') + '</div>' +
+      grid + '</div>';
     return section('info-equipment', '04', 'Equipment', '', right);
   }
 
@@ -775,8 +781,8 @@
   // note, and a back-to-top foot.
   function contactSection() {
     return '<section class="info-contact" id="info-contact">' +
-      '<header class="sec-head"><span class="sec-idx">05</span>' +
-        '<h2 class="sec-title">Write to the studio.</h2></header>' +
+      '<header class="sec-head">' +
+        '<h2 class="sec-title">Contact Us</h2></header>' +
       // The section IS the contact form — a subject line and a body, plus an
       // email so we can write back. (Address / email / instagram live in the
       // header band above.)
@@ -785,7 +791,7 @@
           '<div class="field"><label for="cf-em">Your email</label>' +
             '<input id="cf-em" name="em" type="email" autocomplete="email" required></div>' +
           '<div class="field"><label for="cf-sub">Subject</label>' +
-            '<input id="cf-sub" name="sub" type="text" placeholder="A shoot, a viewing, a question" required></div>' +
+            '<input id="cf-sub" name="sub" type="text" required></div>' +
           '<div class="field"><label for="cf-msg">Message</label>' +
             '<textarea id="cf-msg" name="msg" rows="5" required></textarea></div>' +
           '<button class="send" type="submit">Send it <span class="arr" aria-hidden="true">&rarr;</span></button>' +

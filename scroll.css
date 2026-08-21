@@ -277,6 +277,13 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
 /* Floor plan rides the right column — drawn on paper, legend beneath. */
 .main-right-plan { gap: clamp(16px, 2vw, 24px); }
 
+/* A quiet flag on content that is not final: placeholder copy / drawings. */
+.ph-note {
+  margin: 14px 0 0; font: 400 10px/1.6 var(--mono);
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
+}
+.plan-figure .ph-note { margin-top: 10px; }
+
 /* ---- Mobile-only content blocks (see scroll.js mobileCycHero/mobilePiano).
    Hidden on desktop; the spacing rule keeps the section rhythm intact even
    though the (hidden) piano div sits between two .main sections. ---- */
@@ -459,7 +466,9 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   /* The Space keeps only its heading + the single text block on phones — the
      cyc opener replaces its photo stack (desktop keeps all five). */
   #info-space .main-right { display: none; }
-  /* The piano sits immediately above the Equipment heading. */
+  /* The piano sits immediately above the Equipment heading (its desktop
+     home inside the kit column hides here so it never shows twice). */
+  .equip-piano { display: none; }
   .mobile-piano { display: block; }
   .mobile-piano img { width: 100%; height: auto; display: block; }
   .mobile-piano + .main { margin-top: clamp(20px, 6vw, 30px); }
