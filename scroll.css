@@ -282,7 +282,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
 /* The merged left column pins as ONE satspace-style stack (Space copy,
    Amenities, floor plan) — everything compacted so the whole column fits a
    typical viewport and then simply holds still while the photos flow. */
-.plan-block { margin-top: clamp(10px, 1.2vw, 16px); max-width: 230px; }
+.plan-block { margin-top: clamp(10px, 1.2vw, 16px); max-width: 500px; }
 .plan-block .floorplan { margin-bottom: 0; }
 @media (min-width: 721px) {
   /* pin just clear of the sticky header band so the heading stays visible,

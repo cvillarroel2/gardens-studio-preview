@@ -734,8 +734,7 @@
   function spaceSection() {
     // Condensed single block (2026-08-21) — still placeholder copy.
     var copy = '<div class="sec-copy">' +
-      '<p>Gardens Studio is a single high room at the north edge of the city — one space to book that behaves like a dozen across a day. Nothing is fixed but the walls: the cove drops from the ceiling, furniture rides on castors, the windows black out in about a minute. A shape, not a set — a place you finish yourself.</p>' +
-      '<p class="ph-note">Placeholder text — final copy to come.</p>' +
+      '<p>Gardens Studio is a single high room at the north edge of the city — one space to book that behaves like a dozen across a day. A shape, not a set — a place you finish yourself.</p>' +
       '</div>';
     var amen = '<div class="amen-block">' +
       '<header class="sec-head sec-head-sub" id="info-features">' +
@@ -759,9 +758,7 @@
   // link points at it).
   function planBlock() {
     return '<div class="plan-block" id="info-plan">' +
-      '<figure class="plan-figure">' + floorPlan() +
-      '<figcaption class="ph-note">Placeholder image — final floor plan to come.</figcaption>' +
-      '</figure></div>';
+      '<figure class="plan-figure">' + floorPlan() + '</figure></div>';
   }
 
   // 04 EQUIPMENT — sticky-left heading only; the category lists fill the right
@@ -807,6 +804,33 @@
     '</section>';
   }
 
+  // Desktop: the left column is NOT hard-pinned — like satspace it drifts
+  // gently with the section, moving a small fraction of the page's scroll so
+  // it reads as flowing with the photos. The drift also carries the stack's
+  // below-the-fold tail (the floor plan's bottom) into view by section end.
+  function wireSpaceDrift() {
+    if (window.matchMedia('(max-width: 720px)').matches) return;
+    var sec = document.getElementById('info-space');
+    if (!sec) return;
+    var inner = sec.querySelector('.main-left-inner');
+    if (!inner) return;
+    var ticking = false;
+    function apply() {
+      ticking = false;
+      var r = sec.getBoundingClientRect();
+      var span = Math.max(1, r.height - window.innerHeight);
+      var p = Math.max(0, Math.min(1, -r.top / span));
+      var need = Math.max(0, inner.offsetHeight - (window.innerHeight - 162 - 24));
+      var drift = need + 70;                      // overflow + a breath of parallax
+      inner.style.transform = 'translateY(' + (-p * drift).toFixed(1) + 'px)';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(apply); }
+    }, { passive: true });
+    window.addEventListener('resize', apply, { passive: true });
+    apply();
+  }
+
   function buildInfo() {
     var header = document.getElementById('infoHeader');
     var host = document.getElementById('infoBody');
@@ -816,6 +840,8 @@
         mobileCycHero() + spaceSection() +
         mobilePiano() + equipmentSection() + contactSection();
     }
+
+    wireSpaceDrift();
 
     var toTop = document.getElementById('toTop');
     if (toTop) toTop.addEventListener('click', onHomeClick);
