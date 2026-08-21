@@ -275,7 +275,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
 
 /* RIGHT column — a plain flex column of FULL-SIZE, uncropped images at their
    natural aspect ratio. No object-fit, no fixed-height frames, no cross-fade. */
-.main-right { flex: 1 1 50%; min-width: 0; display: flex; flex-direction: column; gap: clamp(20px, 2.4vw, 34px); }
+.main-right { flex: 1 1 50%; min-width: 0; display: flex; flex-direction: column; gap: clamp(56px, 6vw, 100px); }
 .main-right img {
   display: block; width: 100%; max-width: 100%; height: auto;
   background: var(--paper-2);
@@ -305,7 +305,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   /* segment SPACING must be content height, not padding: a sticky child is
      constrained to its containing block's CONTENT box, so padding gives it
      zero travel and it never pins. min-height = the block + its hold time. */
-  #info-space .lseg { min-height: 66vh; }
+  #info-space .lseg { min-height: 92vh; }
   #info-space .lseg .lblock { position: sticky; top: 205px; }
   #info-space .seg-plan { flex: 1 1 auto; min-height: 0; }
   #info-space .sec-copy p { line-height: 1.65; }
@@ -507,14 +507,14 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
      interleave the left column's text blocks instead (.mob-photos). */
   #info-space .main-right { display: none; }
   .mob-photos {
-    display: flex; flex-direction: column; gap: clamp(14px, 4vw, 22px);
-    margin: clamp(20px, 6vw, 30px) 0;
+    display: flex; flex-direction: column; gap: clamp(24px, 7vw, 38px);
+    margin: clamp(36px, 10vw, 56px) 0;
   }
   .mob-photos img { width: 100%; height: auto; display: block; }
   /* The piano sits immediately above the Equipment heading (its desktop
      home inside the kit column hides here so it never shows twice). */
   .equip-photo { display: none; }
-  .mobile-piano { display: block; }
+  .mobile-piano { display: block; margin-top: clamp(36px, 10vw, 56px); }
   .mobile-piano img { width: 100%; height: auto; display: block; }
   .mobile-piano + .main { margin-top: clamp(20px, 6vw, 30px); }
 
