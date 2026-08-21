@@ -261,6 +261,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   font-size: clamp(28px, 3.6vw, 46px); line-height: 1.04; letter-spacing: -0.02em;
   margin: 0; text-wrap: balance;
 }
+.sec-head-sub { margin-top: clamp(30px, 4vw, 54px); }
 .sec-copy { max-width: 46ch; }
 .sec-copy p { font: 400 15px/1.85 var(--mono); color: var(--ink); margin: 0 0 1.15em; }
 .sec-copy p:last-child { margin-bottom: 0; }
@@ -463,9 +464,9 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   .mobile-hero-cyc img {
     width: 100%; height: 100%; object-fit: cover; display: block;
   }
-  /* The Space keeps only its heading + the single text block on phones — the
-     cyc opener replaces its photo stack (desktop keeps all five). */
-  #info-space .main-right { display: none; }
+  /* On phones the space photo stack steps aside (the cyc opener replaces
+     it) while the amenities photos in the same column still show. */
+  .main-right .mob-hide { display: none; }
   /* The piano sits immediately above the Equipment heading (its desktop
      home inside the kit column hides here so it never shows twice). */
   .equip-piano { display: none; }

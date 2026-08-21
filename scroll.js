@@ -577,17 +577,19 @@
     'green-2': [1000, 1500], 'green-room': [1334, 2000], 'lounge': [2400, 1601],
     'lounge-2': [2000, 1334], 'piano-hall': [2400, 1601], 'vanity-2': [2000, 1334]
   };
-  function imgTag(slug, alt, eager) {
+  function imgTag(slug, alt, eager, cls) {
     var d = IMG_DIMS[slug];
     return '<img src="' + S + slug + '.jpg" alt="Gardens Studio — ' + alt + '"' +
+      (cls ? ' class="' + cls + '"' : '') +
       (d ? ' width="' + d[0] + '" height="' + d[1] + '"' : '') +
       ' loading="' + (eager ? 'eager' : 'lazy') + '" decoding="async">';
   }
   function rightImages(list) {
     return '<div class="main-right">' + list.map(function (im, i) {
       // The stack's lead image greets the reveal — never lazy-load it; an
-      // entry can also force eager itself (im[2]) for the phone sequence.
-      return imgTag(im[0], im[1], i === 0 || !!im[2]);
+      // entry can also force eager itself (im[2]) for the phone sequence,
+      // and carry a class (im[3]) — 'mob-hide' keeps an image desktop-only.
+      return imgTag(im[0], im[1], i === 0 || !!im[2], im[3]);
     }).join('') + '</div>';
   }
 
@@ -710,13 +712,9 @@
   }
 
   // ---- The sections -------------------------------------------------------
-  // 01 THE SPACE — sticky-left summary + room narrative beside a stack of five
-  // full-size, uncropped photos that flow past the pinned text.
   // MOBILE-ONLY blocks (hidden on desktop via scroll.css). The phone read
   // opens on the cyc wall bleeding to all four corners of the viewport, and
-  // the piano photo sits immediately above the Equipment heading. The Space
-  // section's own photo stack is hidden on phones (the cyc opener replaces
-  // it); desktop keeps the full five-image stack.
+  // the piano photo sits immediately above the Equipment heading.
   function mobileCycHero() {
     return '<div class="mobile-hero-cyc">' +
       imgTag('cyclorama', 'the cyc wall', true) + '</div>';
@@ -726,28 +724,30 @@
       imgTag('piano-hall', 'the working end and the grand piano', true) + '</div>';
   }
 
+  // THE SPACE + AMENITIES — one section: both headings share the sticky left
+  // column (the amenities list reads alongside the space copy while the
+  // photos flow past on the right). The right column carries the space stack
+  // (desktop-only, 'mob-hide' — the phone's cyc opener replaces it) followed
+  // by the amenities photos, which show everywhere. The amenities subhead
+  // keeps the id the header nav links to.
   function spaceSection() {
-    // ONE unified block (2026-08-21): the same copy, no paragraph breaks.
+    // Condensed single block (2026-08-21) — still placeholder copy.
     var copy = '<div class="sec-copy">' +
-      '<p>Gardens Studio is a single high room at the north edge of the city. There is only ever one space to book — but over the course of a day it behaves like a dozen. Early light makes it a still-life table; by afternoon it is a sound stage; after dark it closes into a clean white void. We built it that way on purpose. Instead of a warren of little sets, the studio is one generous volume you arrange to the shoot in front of you — roll the cove down, wheel the piano in, black the windows out, or let the north light do all the work. Nothing here is fixed but the walls. Furniture rides on castors, the cove drops from the ceiling, and the windows take blackout in about a minute — what you get is a shape, not a set, a place you finish yourself.</p>' +
+      '<p>Gardens Studio is a single high room at the north edge of the city — one space to book that behaves like a dozen across a day. Nothing is fixed but the walls: the cove drops from the ceiling, furniture rides on castors, the windows black out in about a minute. A shape, not a set — a place you finish yourself.</p>' +
       '<p class="ph-note">Placeholder text — final copy to come.</p>' +
       '</div>';
-    return section('info-space', '01', 'The space', copy, rightImages([
-      ['cyclorama', 'the cyc wall'],
-      ['lounge-2', 'the lounge'],
-      ['arcade', 'the arcade run'],
-      ['vanity-2', 'the vanity, ringed with warm bulbs']
-    ]));
-  }
-
-  // 02 FEATURES — sticky-left heading + the feature list beside three full photos.
-  function featuresSection() {
-    var list = '<ul class="sec-list">' + FEATURES.map(function (f) {
-      return '<li>' + f + '</li>';
-    }).join('') + '</ul>';
-    return section('info-features', '02', 'Amenities', list, rightImages([
-      ['green-room', 'the green room'],
-      ['green-2', 'the green room, styled', true]   // in the phone sequence — eager
+    var amen = '<header class="sec-head sec-head-sub" id="info-features">' +
+      '<h2 class="sec-title">Amenities</h2></header>' +
+      '<ul class="sec-list">' + FEATURES.map(function (f) {
+        return '<li>' + f + '</li>';
+      }).join('') + '</ul>';
+    return section('info-space', '01', 'The space', copy + amen, rightImages([
+      ['cyclorama', 'the cyc wall', false, 'mob-hide'],
+      ['lounge-2', 'the lounge', false, 'mob-hide'],
+      ['arcade', 'the arcade run', false, 'mob-hide'],
+      ['vanity-2', 'the vanity, ringed with warm bulbs', false, 'mob-hide'],
+      ['green-room', 'the green room', true],
+      ['green-2', 'the green room, styled', true]
     ]));
   }
 
@@ -811,7 +811,7 @@
     if (header) header.innerHTML = headerHtml();
     if (host) {
       host.innerHTML =
-        mobileCycHero() + spaceSection() + featuresSection() + planSection() +
+        mobileCycHero() + spaceSection() + planSection() +
         mobilePiano() + equipmentSection() + contactSection();
     }
 
