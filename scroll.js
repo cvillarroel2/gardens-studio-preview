@@ -753,12 +753,22 @@
       ['vanity', 'the dressing room'],
       ['workroom', 'the work area', true]
     ]);
+    // Phone-only photo clusters interleave the text blocks (the desktop
+    // right-column stack hides on phones): living room + kitchen after The
+    // Space, dressing room + desks after Amenities, before the floor plan.
+    function mobPhotos(list) {
+      return '<div class="mob-photos">' + list.map(function (im) {
+        return imgTag(im[0], im[1], true);
+      }).join('') + '</div>';
+    }
     return '<section class="main" id="info-space">' +
       '<div class="main-left"><div class="main-left-inner">' +
         '<div class="lseg"><div class="lblock">' +
           '<header class="sec-head"><h2 class="sec-title">The space</h2></header>' +
           '<div class="space-intro-wrap">' + copy + '</div></div></div>' +
+        mobPhotos([['lounge-2', 'the lounge'], ['arcade', 'the kitchen and arcade run']]) +
         '<div class="lseg"><div class="lblock">' + amen + '</div></div>' +
+        mobPhotos([['vanity', 'the dressing room'], ['workroom', 'the work area']]) +
         '<div class="lseg seg-plan"><div class="lblock">' + planBlock() + '</div></div>' +
       '</div></div>' +
       right +

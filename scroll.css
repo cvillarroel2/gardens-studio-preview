@@ -164,14 +164,20 @@ a.hval:hover, a.hval:focus-visible { color: var(--poppy); border-bottom-color: v
 #scene, #shadows { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
 #shadows {
   pointer-events: none;
-  /* The shadow blobs are drawn on a canvas exactly the banner's size; the
-     bottom row's shadows (cast downward, pushed further when the flowers lean
-     mid-scrub) can run past the canvas edge and hard-clip into a straight
-     seam. Fade the canvas out over its last few px so they dissolve instead. */
-  -webkit-mask-image: linear-gradient(to bottom,
-    transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%);
-  mask-image: linear-gradient(to bottom,
-    transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%);
+  /* The shadow blobs are drawn on a canvas exactly the banner's size; a shadow
+     that runs past the canvas edge hard-clips into a straight seam. Fade the
+     canvas out over its last few px on ALL FOUR sides so they dissolve instead.
+     The sides matter since the wide framing put the letters ~5% from the edge:
+     the G's shadow (offset left by GRADE.shadow.dx) was cut into a vertical
+     line. The two gradients are intersected, so a corner fades on both axes. */
+  -webkit-mask-image:
+    linear-gradient(to bottom, transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%),
+    linear-gradient(to right,  transparent 0, #000 26px, #000 calc(100% - 26px), transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to bottom, transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%),
+    linear-gradient(to right,  transparent 0, #000 26px, #000 calc(100% - 26px), transparent 100%);
+  mask-composite: intersect;
 }
 
 /* During the blow-away the canvas expands to fill the whole window (the camera
@@ -278,6 +284,8 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
 
 /* Floor plan rides the right column — drawn on paper, legend beneath. */
 .main-right-plan { gap: clamp(16px, 2vw, 24px); }
+
+.mob-photos { display: none; }
 
 /* The merged left column pins as ONE satspace-style stack (Space copy,
    Amenities, floor plan) — everything compacted so the whole column fits a
@@ -495,9 +503,14 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   .mobile-hero-cyc img {
     width: 100%; height: 100%; object-fit: cover; display: block;
   }
-  /* On phones the space photo stack steps aside (the cyc opener replaces
-     it) while the amenities photos in the same column still show. */
-  .main-right .mob-hide { display: none; }
+  /* On phones the desktop right-column stack hides entirely — the photos
+     interleave the left column's text blocks instead (.mob-photos). */
+  #info-space .main-right { display: none; }
+  .mob-photos {
+    display: flex; flex-direction: column; gap: clamp(14px, 4vw, 22px);
+    margin: clamp(20px, 6vw, 30px) 0;
+  }
+  .mob-photos img { width: 100%; height: auto; display: block; }
   /* The piano sits immediately above the Equipment heading (its desktop
      home inside the kit column hides here so it never shows twice). */
   .equip-photo { display: none; }
