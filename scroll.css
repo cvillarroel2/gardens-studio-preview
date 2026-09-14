@@ -6,6 +6,12 @@
    top and the title re-plants and blooms again. Same warm paper ground, same
    Fraunces + Space Mono voice as the rest of the site — a new scroll model. */
 
+/* Photos travel in from off-screen (mobile entrances) — clip horizontal
+   overflow at the root so they never create sideways page scroll.
+   overflow-x: clip (not hidden) on purpose: clip does NOT create a scroll
+   container, so position: sticky (left columns, cyc stage) keeps working. */
+html, body { overflow-x: clip; }
+
 /* WHITE GROUND VARIANT — the page is the same white the Blender render sits on
    (#ffffff), so the warm-tan neutral ramp is re-cut as clean greys. Each grey
    was chosen to hold the SAME contrast ratio against the new ground that its
@@ -112,10 +118,11 @@ a.hval { border-bottom: 1px solid transparent; padding-bottom: 1px;
   transition: color .25s var(--ease), border-color .25s var(--ease); }
 a.hval:hover, a.hval:focus-visible { color: var(--poppy); border-bottom-color: var(--poppy); outline: none; }
 
-/* 3 — Nav grid box (~half the width): 01 spans the top row, 02–05 in a 2×2 below,
-   with 1px internal dividers. Active cell wears a poppy top border + ink text. */
+/* 3 — Nav grid box (~half the width): The Space spans the top row, the other
+   three sections share the row below, with 1px internal dividers. Active cell
+   wears a poppy top border + ink text. */
 .hbox-nav {
-  flex: 2.5 1 0; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr;
+  flex: 2.5 1 0; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-auto-rows: 1fr;
 }
 .hnav-cell {
   display: flex; align-items: center; gap: 10px;
@@ -128,7 +135,7 @@ a.hval:hover, a.hval:focus-visible { color: var(--poppy); border-bottom-color: v
   transition: color .2s var(--ease); }
 .hnav-full { grid-column: 1 / -1; }
 .hnav-cell:not(.hnav-full) { border-top: 1px solid var(--hair); }         /* rule under 01, and between rows */
-.hnav-cell:nth-child(3), .hnav-cell:nth-child(5) { border-left: 1px solid var(--hair); }  /* column divider */
+.hnav-cell:nth-child(3), .hnav-cell:nth-child(4) { border-left: 1px solid var(--hair); }  /* column dividers */
 .hnav-cell:hover, .hnav-cell:focus-visible {
   color: var(--ink); background: rgba(207, 67, 37, 0.045);
   box-shadow: inset 0 3px 0 var(--poppy); outline: none;
@@ -184,7 +191,7 @@ a.hval:hover, a.hval:focus-visible { color: var(--poppy); border-bottom-color: v
    is reframed in JS so the title stays the exact same size/place), so the
    flowers can fly clear to the window's right edge instead of being clipped. */
 .title-wrap.blowing { left: 0; top: 0; transform: none; width: 100vw; height: 100vh; }
-.title-wrap.blowing #banner { width: 100vw; height: 100vh; aspect-ratio: auto; max-height: none; }
+.title-wrap.blowing #banner { width: 100%; height: 100%; aspect-ratio: auto; max-height: none; }
 
 /* Scroll cue — a quiet nudge on the hero. It HOLDS through the whole scrub and
    the blow, then fades out once the flowers are away (enterDoc adds .gone). */
@@ -328,7 +335,6 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
    Hidden on desktop; the spacing rule keeps the section rhythm intact even
    though the (hidden) piano div sits between two .main sections. ---- */
 .mobile-hero-cyc, .mobile-piano { display: none; }
-.mobile-piano + .main { margin-top: clamp(48px, 13vw, 78px); }
 .plan-figure { margin: 0; }
 .plan-figure .floorplan { width: 100%; height: auto; max-width: 100%; margin: 0 0 clamp(16px, 2vw, 22px); }
 
@@ -362,6 +368,14 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   font: 400 12.5px/1.5 var(--mono); color: var(--muted);
 }
 .kit-cat li:last-child { border-bottom: 0; }
+
+/* Final desktop presentation; the mobile layout keeps its existing styling. */
+@media (min-width: 721px) {
+  body[data-desktop-wind="original"] #windLinePanel { display: none; }
+  .sec-list li::before { content: none; }
+  #info-features .sec-title, #info-equipment .sec-title,
+  .sec-list li, .kit-cat h3, .kit-cat li { color: #000; }
+}
 
 /* ---- Floor plan drawing (shared by the right panel + the mobile inline) ---- */
 .floorplan { display: block; width: 100%; height: auto; max-width: 100%; margin: 0 auto;
@@ -478,8 +492,8 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   .hbox-nav { display: none; }
   /* In the column header the nav box has no definite height, so the base
      grid-auto-rows:1fr would collapse — size rows to their content instead. */
-  .info-header.nav-open .hbox-nav { display: grid; grid-auto-rows: auto; }
-  .hnav-cell { padding: 15px clamp(14px, 4vw, 20px); }
+  .info-header.nav-open .hbox-nav { display: grid; grid-auto-rows: auto; grid-template-columns: 1fr; }
+  .hnav-cell { padding: 15px clamp(14px, 4vw, 20px); border-left: 0 !important; }
 
   /* Sections stack to one column: the left text, then its full-size images (still
      uncropped, natural aspect). No pinning — a simple stacked read. */
@@ -494,14 +508,32 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   /* The phone read opens on the cyc wall, bled to all four corners of the
      viewport: full width via the negative side pull out of .info-body's
      padding, full height via 100svh, covered (cropped) — never letterboxed. */
+  /* The cyc opener (2026-09-11): a 2-viewport scroll RUNWAY holding a sticky
+     full-viewport stage. The wall opens WHOLE — natural horizontal framing,
+     letterboxed on the page ground — and scroll scales it up (wireCycHero)
+     until the screen's edges reach the wall's edges, where the sticky runs
+     out and the photo scrolls away at full bleed. */
   .mobile-hero-cyc {
-    display: block;
-    width: 100vw; height: 100vh; height: 100dvh;
-    margin: calc(0px - clamp(46px, 8vh, 96px)) 0 clamp(48px, 13vw, 78px)
+    display: block; position: relative;
+    width: 100vw; height: 145vh; height: 145dvh;  /* short runway: quick grow (2026-09-11) */
+    /* Negative bottom margin (2026-09-11): "The Space" rises into the screen
+       WHILE the zoom is still finishing, instead of waiting out the runway —
+       the stopped image is a roughly square band mid-screen, so the heading
+       climbs into the clear ground beneath it. 20dvh leaves the title sitting
+       ~a photo-gap (≈50-65px) below the image at the stop, matching the
+       site's photo/text rhythm (clamp(36px, 10vw, 56px)). */
+    margin: calc(0px - clamp(46px, 8vh, 96px)) 0 calc(clamp(48px, 13vw, 78px) - 20dvh)
             calc(50% - 50vw);
   }
+  .mobile-hero-cyc .cyc-stage {
+    position: sticky; top: 0;
+    width: 100%; height: 100vh; height: 100dvh;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
   .mobile-hero-cyc img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
+    width: 100%; height: auto; display: block;
+    will-change: transform;
   }
   /* On phones the desktop right-column stack hides entirely — the photos
      interleave the left column's text blocks instead (.mob-photos). */
@@ -514,9 +546,10 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   /* The piano sits immediately above the Equipment heading (its desktop
      home inside the kit column hides here so it never shows twice). */
   .equip-photo { display: none; }
+  /* The piano photo FOLLOWS the Equipment list (2026-09-11, was above the
+     heading) at the site's standard photo/text gap. */
   .mobile-piano { display: block; margin-top: clamp(36px, 10vw, 56px); }
   .mobile-piano img { width: 100%; height: auto; display: block; }
-  .mobile-piano + .main { margin-top: clamp(20px, 6vw, 30px); }
 
 }
 

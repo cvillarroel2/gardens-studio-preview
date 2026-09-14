@@ -241,6 +241,12 @@ const GRADES = {
 const GRADE = GRADES[V.id] || GRADES.white;
 const GLOBAL_SCALE = GRADE.globalScale || 1.08;
 const DPR_CAP = 1.75;
+// Live render-resolution cap. Normally DPR_CAP; the page can lower it for a
+// bounded stretch via setFrame({dprCap}) — the blow renders full-screen with
+// every flower tumbling fast, where a briefly reduced pixel ratio is
+// imperceptible but cuts the phone GPU's fragment load close to half.
+// replant() restores it, so a regrown title always renders sharp again.
+let dprCap = DPR_CAP;
 
 const BLOOM_STAGGER = 1.65;     // s — spread of start times (by bl rank)
 const BLOOM_DUR = 0.75;         // s — each flower's grow duration
@@ -251,8 +257,15 @@ const HAND_RADIUS = 0.55;       // world radius of the "hand" itself
 // framed field, and partly hidden under the hand, so on touch pointers the
 // brush responds harder and reaches further. Mouse input is untouched: with
 // hand.isTouch false both terms collapse to the shipped desktop behaviour.
-const TOUCH_GAIN = 1.7;         // × on push / drag / strike amplitudes for touch
-const TOUCH_REACH = 0.55;       // extra world reach around the fingertip
+const TOUCH_GAIN = 2.4;         // × on push / drag / strike amplitudes for touch (raised 2026-09-08: brushing read too faint on phones)
+const TOUCH_REACH = 0.8;        // extra world reach around the fingertip
+// × on the hand SPEED fed to the response curves for touch (2026-09-08). The
+// brush curve is calibrated to real mouse speeds; a slow finger drag sat in
+// its near-zero toe and read as almost nothing. Scaling the perceived speed
+// moves slow/medium drags up the curve while fast swipes, already near
+// saturation, are barely changed — amplitude gains alone could never fix the
+// slow end without also blowing out the fast end.
+const TOUCH_VGAIN = 2.0;
 const SUB_DT = 1 / 60;          // s — physics substep
 const MAX_FRAME_DT = 0.2;       // s — total simulated time per frame, capped
 
@@ -427,8 +440,8 @@ const crng = mulberry32(0x0C0A17E5);
 // Ambient-breeze state (declared here because buildFlowers, further down but
 // executed at module load, measures the gust wavelength from the new layout).
 let breezeT = 0;         // s — the breeze's own wall clock
-let breezeK = 0;         // 0..1 — global gain (rises after the bloom; 0 while
-                         //        the word is blooming / retracting / blowing)
+let breezeK = 0;         // 0..1 — global gain (rises after bloom, persists through
+                         //        departure, fades once the word has left)
 let breezeX0 = 0;        // world-x of the leftmost flower
 let breezeW = 1;         // world width of the word = one gust wavelength
 let breezeSpanW = Math.PI * 2;   // 2π / breezeW, precomputed
@@ -457,9 +470,18 @@ const isSoftwareGL = (() => {
   } catch { return false; }
 })();
 
+// Phones (2026-09-11): the canvas is already rendered BELOW native resolution
+// there (DPR capped at 1.75 on 3x screens), so the CSS upscale softens petal
+// edges anyway and 4x MSAA buys almost nothing visually — while costing a
+// large slice of the GPU frame whenever the whole bed is in motion. Frame
+// analysis of an on-device recording showed the "large movement" lag begins
+// during the STIR, before any wind: sustained full-bed render cost, not the
+// hand-off. Keep MSAA on desktops and tablets.
+const isPhone = (window.devicePixelRatio || 1) >= 2 &&
+  Math.min(window.screen.width || 1e4, window.screen.height || 1e4) < 500;
 const renderer = new THREE.WebGLRenderer({
   canvas,
-  antialias: !isSoftwareGL,
+  antialias: !isSoftwareGL && !isPhone,
   alpha: true, // 2D shadow canvas sits underneath
 });
 renderer.setClearColor(0xffffff, 0);
@@ -488,11 +510,16 @@ camera.lookAt(0, 0, 0);
 
 function resize() {
   const w = banner.clientWidth, h = banner.clientHeight;
-  const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
-  renderer.setPixelRatio(dpr);
-  renderer.setSize(w, h, false);
-  shadowCanvas.width = Math.round(w * dpr);
-  shadowCanvas.height = Math.round(h * dpr);
+  const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
+  // Change dimensions and resolution together. setPixelRatio first resizes the
+  // old frame, so following it with setSize reallocates the WebGL buffer twice
+  // exactly when the wind expands the canvas (and again on regrow).
+  renderer.setDrawingBufferSize(w, h, dpr);
+  // The shadow layer is soft blur-blobs — half resolution is visually
+  // indistinguishable (CSS scales it up) and cuts its fill cost 4×, which
+  // mattered most during the full-screen blow-away on phones (2026-09-08).
+  shadowCanvas.width = Math.round(w * dpr * 0.5);
+  shadowCanvas.height = Math.round(h * dpr * 0.5);
   const halfH = HALF_W * (h / w);
   camera.top = halfH; camera.bottom = -halfH;
   camera.left = -HALF_W; camera.right = HALF_W;
@@ -1472,9 +1499,12 @@ function drawShadows() {
 const CELL = 3.0;
 const grid = new Map();
 function cellKey(cx, cz) { return cx * 4096 + cz; }
+let maxReach = 0;   // largest influence radius in the bed — strike AABB margin
 function buildGrid() {
   grid.clear();
+  maxReach = 0;
   for (const r of flowers) {
+    if (r.reach > maxReach) maxReach = r.reach;
     const k = cellKey(Math.floor(r.x / CELL), Math.floor(r.z / CELL));
     let arr = grid.get(k);
     if (!arr) grid.set(k, (arr = []));
@@ -1483,6 +1513,7 @@ function buildGrid() {
 }
 buildGrid();
 
+let shadowFlip = false;         // every-other-frame shadow pass during the blow
 const liveSet = new Set();
 function wakeNear(x0, z0, x1, z1) {
   const pad = 3.0; // >= max reach (0.45 + 0.62·maxSc + HAND_RADIUS ≈ 2.32) + TOUCH_REACH
@@ -1776,7 +1807,7 @@ function updateFlowerMatrix(r) {
 let breezeShown = BREEZE_ON;
 function pollBreezeVisible() {
   if (!BREEZE_ON) { breezeShown = false; return; }
-  if (document.hidden || blownAway) { breezeShown = false; return; }
+  if (document.hidden || (blownAway && mode !== 'blow')) { breezeShown = false; return; }
   const cs = getComputedStyle(banner);
   if (cs.visibility === 'hidden' || cs.display === 'none' || cs.opacity === '0') {
     breezeShown = false; return;
@@ -1804,11 +1835,11 @@ function tick() {
   // ---- ambient breeze gain ----
   // Advanced BEFORE the matrices are written so every flower touched this frame
   // (by the bloom loop, by the physics loop, or by the breeze pass at the end)
-  // samples the same instant of the gust wave. The wind is silent while the
-  // word is growing, wilting or blowing away — those animations own the
-  // transform outright — and picks up over BREEZE_RISE once the word has
-  // settled, so the bloom still lands on a still title.
-  const breezeWanted = BREEZE_ON && breezeShown && mode === 'idle' && bloomDone && !blownAway;
+  // samples the same instant of the gust wave. Keep the additive sway during
+  // departure: flowers awaiting their stagger must not freeze as one sheet.
+  // Growth and retraction still own their transform and suppress the breeze.
+  const breezeWanted = BREEZE_ON && breezeShown && bloomDone &&
+    (mode === 'blow' || (mode === 'idle' && !blownAway));
   if (breezeWanted) {
     breezeT += frameDt;
     breezeK = Math.min(1, breezeK + frameDt / BREEZE_RISE);
@@ -1853,9 +1884,23 @@ function tick() {
       }
     }
     anyMatrix = true;
-    drawShadows();
+    // Keep desktop contact shadows beneath the departing flowers. The phone
+    // fade is a device-specific performance tradeoff, not desktop artwork.
+    if (mode === 'blow' && isPhone) {
+      const sa = Math.max(0, 1 - clk / 0.35);
+      shadowCanvas.style.opacity = sa.toFixed(3);
+      if (sa > 0 && (shadowFlip = !shadowFlip)) drawShadows();
+    } else {
+      shadowCanvas.style.opacity = '';
+      drawShadows();
+    }
     if (allDone) {
-      if (mode === 'bloom') bloomDone = true;
+      if (mode === 'bloom') {
+        bloomDone = true;
+        // Additive signal for the page choreography (2026-09-08): scroll.js
+        // holds the scroll capture closed until the word has fully bloomed.
+        window.dispatchEvent(new Event('gardens-bloomed'));
+      }
       mode = 'idle';
       shadowsDrawnFinal = false;
       const cb = animCb; animCb = null;
@@ -1880,10 +1925,11 @@ function tick() {
   // hand occupies space), while only a quick hand actually shoves them. The
   // drag (follow) stays on the brush curve alone so a slow creep never tows
   // flowers along.
-  const handResp = brushResponse(speed);
+  const vResp = hand.isTouch ? speed * TOUCH_VGAIN : speed; // touch reads faster to the curves
+  const handResp = brushResponse(vResp);
   const tGain = hand.isTouch ? TOUCH_GAIN : 1;          // finger hits harder
   const reachX = hand.isTouch ? TOUCH_REACH : 0;        // and reaches further
-  const pushAmp = (PUSH_MAX * handResp + PUSH_LOW * partResponse(speed)) * tGain;
+  const pushAmp = (PUSH_MAX * handResp + PUSH_LOW * partResponse(vResp)) * tGain;
   const dragAmp = DRAG_MAX * handResp * tGain;
 
   // ---- swept-path impulse channel ----
@@ -1926,8 +1972,9 @@ function tick() {
       // one-frame pass and a forty-frame pass deposit the same total kick.
       // Scaled by the ONE shared brush curve only: a creep whispers, every
       // step up in speed lands a clearly harder knock, a whip saturates.
-      const kick = KICK_GAIN * brushResponse(effSpeed) * accBoost *
-        (hand.isTouch ? TOUCH_GAIN : 1);
+      const kick = KICK_GAIN *
+        brushResponse(hand.isTouch ? effSpeed * TOUCH_VGAIN : effSpeed) *
+        accBoost * (hand.isTouch ? TOUCH_GAIN : 1);
       if (!(kick > 1e-4) || !Number.isFinite(kick)) continue;
       const pieces = Math.min(80, Math.max(1, Math.ceil(s.len / SEG_MAX_LEN)));
       if (pieces === 1) {
@@ -1945,6 +1992,21 @@ function tick() {
       }
     }
     pathBuf.length = 0;
+    // Cheap AABB per strike piece (2026-09-11): the strike pass below tests
+    // EVERY live flower against EVERY piece — a hard swipe means dozens of
+    // pieces with the whole bed live, and those closest-point evaluations
+    // were the hard-swipe frame spike on phones. Four compares reject a pair
+    // first; the margin is the LARGEST influence radius in the bed, so no
+    // strike that could land is ever skipped — identical physics.
+    {
+      const m = maxReach + reachX;
+      for (let si = 0; si < strikeSegs.length; si++) {
+        const s = strikeSegs[si];
+        const x1 = s.x0 + s.ux * s.len, z1 = s.z0 + s.uz * s.len;
+        s.bx0 = (s.x0 < x1 ? s.x0 : x1) - m; s.bx1 = (s.x0 < x1 ? x1 : s.x0) + m;
+        s.bz0 = (s.z0 < z1 ? s.z0 : z1) - m; s.bz1 = (s.z0 < z1 ? z1 : s.z0) + m;
+      }
+    }
   } else if (handFresh) {
     hand.peakV *= Math.exp(-frameDt / PEAK_TAU);   // paused mid-gesture
   } else {
@@ -1993,14 +2055,15 @@ function tick() {
       // reach disc), so a full pass delivers the same total kick regardless
       // of how many frames or events it spanned: no dwell dilution, no
       // double-counting, no aliasing past flowers between samples.
+      const rrS = r.reach + reachX;                  // constant per flower
       for (let si = 0; si < strikeSegs.length; si++) {
         const s = strikeSegs[si];
+        if (r.x < s.bx0 || r.x > s.bx1 || r.z < s.bz0 || r.z > s.bz1) continue;
         const rx = r.x - s.x0, rz = r.z - s.z0;
         let tSeg = rx * s.ux + rz * s.uz;            // closest point on piece
         if (tSeg < 0) tSeg = 0; else if (tSeg > s.len) tSeg = s.len;
         const cx = rx - s.ux * tSeg, cz = rz - s.uz * tSeg;
         const dSeg = Math.hypot(cx, cz);
-        const rrS = r.reach + reachX;
         if (dSeg < rrS) {
           const wS = 1 - dSeg / rrS;
           // strike falloff is FLATTER than the push falloff (near-linear in w
@@ -2023,7 +2086,13 @@ function tick() {
       // damped harmonic oscillator toward (tx, tz), integrated in substeps so
       // behaviour is framerate-independent
       const w0 = r.omega;
-      let remaining = frameDt;
+      // Phones: cap catch-up integration at 3 substeps (50ms of simulated
+      // time per rendered frame). After one stalled frame the full catch-up
+      // (up to 12 substeps × ~1,000 flowers) made the NEXT frame stall too —
+      // jank compounding itself. Under a spike the sway now plays a touch
+      // slow-mo for a frame instead, which reads far smoother than the
+      // cascade. Desktops keep exact catch-up.
+      let remaining = isPhone ? Math.min(frameDt, 3 * SUB_DT) : frameDt;
       while (remaining > 1e-6) {
         const h = Math.min(SUB_DT, remaining);
         remaining -= h;
@@ -2220,11 +2289,13 @@ function replant(list, frame) {
   if (frame && typeof frame.halfW === 'number') HALF_W = frame.halfW;
   buildFlowers(list);
   buildGrid();
+  dprCap = DPR_CAP;                            // restore full render resolution
   resize();                                    // reframe camera + shadow canvas
   for (const r of flowers) { r.bloomScale = 0; r.bx = 0; r.bz = 0; r.btumble = 0; r.bsc = 1; }
   mode = 'idle'; bloomDone = true; animT0 = -1; animCb = null;
   blownAway = false; breezeK = 0;               // fresh word: the wind restarts with it
   driftRescatter();                            // and a freshly scattered sky
+  shadowCanvas.style.opacity = '';             // undo the blow's shadow fade-out
   drawShadows(); requestRender();
 }
 // Grow the current word out of the ground.
@@ -2252,11 +2323,19 @@ function blowAway(cb) {
     r.blowTumble = Math.PI * (3 + rng() * 7) * (rng() < 0.5 ? -1 : 1);   // ~1.5–5 spins, either way
     r.bsc = 1;
   }
-  mode = 'blow'; animT0 = -1; animCb = cb || null; liveSet.clear();
-  blownAway = true;                    // the word leaves frame: ambient wind off
+  // Departure adds translation/tumble to the current spring pose. Retain the
+  // live set and velocities so the handoff never freezes residual movement.
+  mode = 'blow'; animT0 = -1; animCb = cb || null;
+  blownAway = true;                    // off-frame after this departure finishes
   startLoop();
 }
-function setFrame(frame) { if (frame && typeof frame.halfW === 'number') HALF_W = frame.halfW; resize(); }
+function setFrame(frame) {
+  if (frame && typeof frame.halfW === 'number') HALF_W = frame.halfW;
+  // Optional, additive: a temporary render-resolution cap (never above
+  // DPR_CAP). Cleared by replant(). Existing callers are untouched.
+  if (frame && typeof frame.dprCap === 'number') dprCap = Math.min(frame.dprCap, DPR_CAP);
+  resize();
+}
 
 window.Garden = { replant, bloomIn, retract, blowAway, setFrame, isReady: true };
 window.dispatchEvent(new Event('garden-ready'));
@@ -2270,7 +2349,7 @@ window.dispatchEvent(new Event('garden-ready'));
 // Types (see TYPES below): slow-short, slow-long, fast-flick,
 // fast-long-outside, veryfast-diag-outside, whip-outside, vertical,
 // cross-exit, multi. Legacy aliases: ?demo=sweep[&speed=fast][&len=long],
-// ?demo=whip.
+// ?demo=whip. Add &pointer=touch to exercise the mobile response constants.
 //
 // A type is a list of STROKES; a stroke is a continuous sequence of pointer
 // samples {t ms, fx, fy} in canvas fractions. Strokes are separated by silent
@@ -2287,6 +2366,7 @@ window.dispatchEvent(new Event('garden-ready'));
 {
   const q = new URLSearchParams(location.search);
   const demoKind = q.get('demo');
+  const demoPointer = q.get('pointer') === 'touch' ? 'touch' : 'mouse';
   let typeName = null;
   if (demoKind === 'swipe') typeName = q.get('type') || 'fast-long-outside';
   else if (demoKind === 'whip') typeName = 'whip-outside';
@@ -2419,7 +2499,7 @@ window.dispatchEvent(new Event('garden-ready'));
         const r = rect();
         const x = r.left + r.width * ev.fx;
         const y = r.top + r.height * ev.fy;
-        window.dispatchEvent(new PointerEvent('pointermove', { clientX: x, clientY: y }));
+        window.dispatchEvent(new PointerEvent('pointermove', { clientX: x, clientY: y, pointerType: demoPointer }));
         ev.stroke.pts.push({ x: hand.x, z: hand.z, t: ev.t });
         // headless rAF is starved — step manually; a healthy rAF makes this a no-op
         if (performance.now() / 1000 - lastRenderAt > 0.012) tick();
@@ -2480,7 +2560,7 @@ window.dispatchEvent(new Event('garden-ready'));
       const span = moved ? (maxX - minX).toFixed(1) : '0';
       const coverage = expected ? (100 * covered) / expected : 100;
       const report = {
-        type: typeName, expected, covered, expectedFull,
+        type: typeName, pointer: demoPointer, expected, covered, expectedFull,
         coverage: +coverage.toFixed(1), missed,
         peakTilt: +M.peak.toFixed(3), postPeakTilt: +M.postPeakTilt.toFixed(3),
         postPeakVel: +M.postPeakVel.toFixed(2), postEnergy: +M.postEnergy.toFixed(3),

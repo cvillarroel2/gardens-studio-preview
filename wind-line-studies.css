@@ -1,0 +1,23 @@
+.wind-style-panel { position:fixed; z-index:100; top:max(10px,env(safe-area-inset-top)); left:12px; right:12px; margin:auto; max-width:480px; padding:12px 14px 10px; background:rgba(255,255,253,.96); color:#535950; border:1px solid #dedfd8; border-radius:5px; font:12px/1.4 'Bricolage Grotesque',Arial,sans-serif; }
+.style-heading { display:flex; justify-content:space-between; gap:10px; margin-bottom:9px; font-size:10px; letter-spacing:.08em; text-transform:uppercase; }
+.wind-style-panel a { color:inherit; text-decoration:none; }
+.style-heading a { text-decoration:underline; text-underline-offset:3px; }
+.wind-style-panel nav { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:5px; }
+.wind-style-panel nav a { padding:12px 0 10px; min-height:42px; box-sizing:border-box; text-align:center; border-bottom:1px solid #e3e4dd; white-space:nowrap; font-size:11px; }
+.wind-style-panel nav a[aria-current] { border-bottom:2px solid #6f795f; color:#303a29; }
+.wind-style-panel p { margin:9px 0; font-size:11px; }
+.style-actions { display:flex; align-items:center; gap:8px; }
+.style-actions button { color:inherit; background:transparent; border:1px solid #d8dcd0; padding:7px 9px; border-radius:3px; min-height:33px; font:inherit; }
+.style-actions button:disabled { opacity:.4; }
+.style-actions a { margin-left:auto; text-align:right; text-decoration:underline; text-underline-offset:3px; max-width:46%; font-size:10px; }
+.wind-style-panel small { display:block; color:#8b8f85; font-size:9px; margin-top:8px; }
+.silk-options { display:flex; align-items:center; gap:4px; margin:8px 0; font-size:10px; }
+.silk-options[hidden] { display:none; }
+.silk-options span { color:#858c7a; margin-right:6px; }
+.silk-options a { padding:6px 12px; border:1px solid #e1e5d9; border-radius:3px; }
+.silk-options a[aria-current] { background:#edf0e6; border-color:#b8c1a9; color:#38452d; }
+.wind-style-panel.is-winding .silk-options { display:none; }
+.wind-style-panel.is-winding .style-heading,.wind-style-panel.is-winding p,.wind-style-panel.is-winding .style-actions,.wind-style-panel.is-winding small { display:none; }
+.wind-style-panel.is-winding { padding:4px 10px; background:rgba(255,255,253,.92); }
+@media(min-width:721px) { .wind-style-panel { right:auto; width:390px; } }
+@media(max-width:370px) { .wind-style-panel nav a { font-size:9px; } }

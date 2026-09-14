@@ -12,19 +12,34 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
 
 <!-- ground theme: chosen ground applied before first paint (no flash). -->
-<script src="variants.js?v=2"></script>
-<script src="variant-boot.js?v=2"></script>
-<script src="ground-boot.js?v=8"></script>
-<script src="font-boot.js"></script>
-<link rel="stylesheet" href="fonts/fonts.css">
-<link rel="stylesheet" href="scroll.css?v=33">
-<link rel="stylesheet" href="fonts/fonts-extra.css">
-<link rel="stylesheet" href="typefaces.css">
+<script src="variants.js?v=1570f0778b31"></script>
+<script src="variant-boot.js?v=7922f580da13"></script>
+<script src="ground-boot.js?v=be59626f2f72"></script>
+<script src="font-boot.js?v=dbe125acaef2"></script>
+<link rel="stylesheet" href="fonts/fonts.css?v=c31021261bff">
+<link rel="stylesheet" href="scroll.css?v=58dc0269c11a">
+<link rel="stylesheet" href="fonts/fonts-extra.css?v=e3f1c15d894f">
+<link rel="stylesheet" href="typefaces.css?v=6fed1f13531f">
 <!-- Home title: GARDENS over studio, stacked, in a squarer frame (same as the
      hash-routed home). garden.js reads this to grow the living title on load. -->
-<script src="preview-config.js?v=2?v=7"></script>
+<script src="preview-config.js?v=33b5d408c5dd"></script>
+<link rel="stylesheet" href="wind-line-studies.css?v=07d1ebabe8f4">
+<link rel="stylesheet" href="wind-selection.css?v=1cc9630d885f">
+<script src="wind-original.js?v=ba07977e4498"></script>
+<script src="wind-selection.js?v=2f6ebeb41d63"></script>
+<script src="wind-line-studies.js?v=8ec89446be01"></script>
+<script src="wind-gust-studies.js?v=204cbb371d7e"></script>
 </head>
-<body>
+<body data-desktop-wind="original">
+<aside id="windLinePanel" class="wind-style-panel" aria-label="Wind selection">
+  <div class="style-heading"><span>Gardens / wind</span></div>
+  <nav aria-label="Choose wind style">
+    <a href="?wind=original" data-wind="original">Original</a>
+    <a href="?wind=journey" data-wind="journey">Journey</a>
+    <a href="?wind=roll" data-wind="roll">Roll</a>
+  </nav>
+  <div class="style-actions"><button data-play disabled>Play wind</button><button data-reset>Reset</button></div>
+</aside>
 <a class="skip" href="#info-space">skip to the studio</a>
 
 <!-- The living title — ONE instance, fixed at the centre of the hero. It blooms
@@ -64,10 +79,7 @@
   <div class="info-body" id="infoBody"></div>
 </main>
 
-<script type="module" src="garden.js?v=31"></script>
-<script src="scroll.js?v=22"></script>
-<script src="theme.js?v=9"></script>
-<script src="variant-pick.js?v=2"></script>
-<script src="font-pick.js"></script>
-</body>
+<script type="module" src="garden.js?v=5b1c2cbabef3"></script>
+<script src="scroll.js?v=fe3376e9771e"></script>
+<script src="perf-probe.js?v=6bedaba2eae2"></script>
 </html>
