@@ -1113,7 +1113,6 @@
           '<a class="cc-value" href="mailto:hi@gardensorlando.com">hi@gardensorlando.com</a></div>' +
       '</div>' +
       '<div class="info-foot">' +
-        '<span class="foot-mark">Gardens Studio</span>' +
         '<a class="to-top" href="#top" id="toTop">Back to the top <span class="arr" aria-hidden="true">&uarr;</span></a>' +
       '</div>' +
     '</section>';
