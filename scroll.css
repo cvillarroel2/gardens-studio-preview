@@ -480,7 +480,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   text-transform: uppercase; color: var(--muted); }
 .to-top { font: 400 11px/1 var(--mono); letter-spacing: 0.2em; text-transform: uppercase;
   color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
-  border-bottom: 1px solid var(--poppy); padding-bottom: 4px; cursor: pointer; }
+  border-bottom: 1px solid var(--accent); padding-bottom: 4px; cursor: pointer; }
 .to-top .arr { transition: transform .3s var(--ease); }
 .to-top:hover .arr { transform: translateY(-4px); }
 
