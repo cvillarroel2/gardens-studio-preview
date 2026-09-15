@@ -321,6 +321,11 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
      constrained to its containing block's CONTENT box, so padding gives it
      zero travel and it never pins. min-height = the block + its hold time. */
   #info-space .lseg { min-height: 92vh; }
+  /* A real gap between consecutive cards (2026-09-14): at the push-off
+     moment the incoming card used to sit flush against the pinned one —
+     "Amenities" touching the last line of copy. The segment margin keeps
+     one section gap between them for the whole hand-over. */
+  #info-space .lseg + .lseg { margin-top: var(--gap-section); }
   #info-space .lseg .lblock { position: sticky; top: 205px; }
   #info-space .seg-plan { flex: 1 1 auto; min-height: 0; }
   #info-space .sec-copy p { line-height: 1.65; }
@@ -506,19 +511,11 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   /* Sections stack to one column: the left text, then its full-size images (still
      uncropped, natural aspect). No pinning — a simple stacked read. */
   .main { flex-direction: column; gap: clamp(20px, 6vw, 30px); }
-  /* Phone spacing scale — the same three tokens, cut for a narrow column.
-     Gaps NEVER stack: a photo owns only its top gap, and whatever follows it
-     (a heading block or a new section) owns the section gap. */
-  :root {
-    --gap-head:    18px;
-    --gap-photo:   clamp(36px, 10vw, 56px);
-    --gap-section: clamp(56px, 14vw, 84px);
-  }
-  .sec-head-sub { margin-top: 0; }               /* a preceding photo/segment owns the gap */
-  .sec-list { margin-top: 0; }                    /* heading -> list = --gap-head, like copy */
-  .contact-form-wrap { margin-top: var(--gap-head); }
-  .mob-photos + .lseg { margin-top: var(--gap-section); }
-  .main + .main { margin-top: var(--gap-section); }
+  /* Phone spacing is deliberately NOT on the desktop token scale — the
+     owner's normalization brief was desktop-only (2026-09-14); these are the
+     phone's original values. */
+  .info-contact { margin-top: clamp(72px, 11vh, 140px); }
+  .main + .main { margin-top: clamp(48px, 13vw, 78px); }
   .main-left, .main-right { flex: 1 1 auto; width: 100%; }
   .main-left-inner { position: static; }
   .sec-copy, .sec-list { max-width: none; }
@@ -542,7 +539,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
        climbs into the clear ground beneath it. 20dvh leaves the title sitting
        ~a photo-gap (≈50-65px) below the image at the stop, matching the
        site's photo/text rhythm (clamp(36px, 10vw, 56px)). */
-    margin: calc(0px - clamp(46px, 8vh, 96px)) 0 calc(var(--gap-section) - 20dvh)
+    margin: calc(0px - clamp(46px, 8vh, 96px)) 0 calc(clamp(48px, 13vw, 78px) - 20dvh)
             calc(50% - 50vw);
   }
   .mobile-hero-cyc .cyc-stage {
@@ -560,7 +557,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   #info-space .main-right { display: none; }
   .mob-photos {
     display: flex; flex-direction: column; gap: clamp(24px, 7vw, 38px);
-    margin: var(--gap-photo) 0 0;                 /* top only — the follower owns its gap */
+    margin: clamp(36px, 10vw, 56px) 0;
   }
   .mob-photos img { width: 100%; height: auto; display: block; }
   /* The piano sits immediately above the Equipment heading (its desktop
@@ -568,7 +565,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   .equip-photo { display: none; }
   /* The piano photo FOLLOWS the Equipment list (2026-09-11, was above the
      heading) at the site's standard photo/text gap. */
-  .mobile-piano { display: block; margin-top: var(--gap-photo); }
+  .mobile-piano { display: block; margin-top: clamp(36px, 10vw, 56px); }
   .mobile-piano img { width: 100%; height: auto; display: block; }
 
 }
