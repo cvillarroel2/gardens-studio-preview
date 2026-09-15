@@ -899,7 +899,7 @@
       '</div>' +
       '<div class="hbox hbox-contact">' +
         hrow('Address', '<span class="hval">1938 W Fairbanks Ave, Winter Park, FL 32789</span>') +
-        hrow('Email', '<a class="hval" href="mailto:hello@gardens.studio">hello@gardens.studio</a>') +
+        hrow('Email', '<a class="hval" href="mailto:hi@gardensorlando.com">hi@gardensorlando.com</a>') +
         hrow('Instagram', '<a class="hval" href="https://instagram.com" target="_blank" rel="noopener">@gardens.studio</a>') +
       '</div>' +
       '<nav class="hbox hbox-nav" id="infoNav" aria-label="Studio sections">' +
@@ -1110,7 +1110,7 @@
         '<div class="cc-row"><span class="cc-label">Instagram</span>' +
           '<a class="cc-value" href="https://instagram.com" target="_blank" rel="noopener">@gardens.studio</a></div>' +
         '<div class="cc-row"><span class="cc-label">Email</span>' +
-          '<a class="cc-value" href="mailto:hello@gardens.studio">hello@gardens.studio</a></div>' +
+          '<a class="cc-value" href="mailto:hi@gardensorlando.com">hi@gardensorlando.com</a></div>' +
       '</div>' +
       '<div class="info-foot">' +
         '<span class="foot-mark">Gardens Studio</span>' +
