@@ -324,10 +324,15 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
        equipment          = sticky heading on the left, lists on the right.
      The base `.main-left-inner { position: sticky; top: var(--stick) }` is
      the sticky-container; the old card-train overrides are gone. */
+  /* MOTION ONLY (owner's brief, 2026-09-14): what is adopted from satspace
+     is how the text chunks MOVE — each section's text pins as one block,
+     the next section's block rises toward it (sections sit close, 40px, so
+     they nearly meet), then the pinned block DETACHES as its section ends
+     and the next one pins — plus their title -> body spacing. Layout,
+     fonts, list styling and image spacing stay the site's own. */
   #info-space .lseg .lblock { position: static; }
-  .main + .main { margin-top: 40px; }                 /* sections 40px apart */
-  .main-right { gap: 30px; }                          /* images 30px apart */
-  .sec-head { margin: 0 0 68px; }                     /* heading -> text */
+  .main + .main { margin-top: 40px; }                 /* chunks come close before the hand-off */
+  .sec-head { margin: 0 0 68px; }                     /* title -> body text */
   #info-space .sec-copy { max-width: 46ch; }
   #info-space .sec-copy p { line-height: 1.65; }
   #info-space .space-intro-wrap { margin-bottom: 43px; }   /* description -> FEATURES */
@@ -568,10 +573,6 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   /* The piano sits immediately above the Equipment heading (its desktop
      home inside the kit column hides here so it never shows twice). */
   .equip-photo { display: none; }
-  /* The kit lists moved to the right column (desktop satspace layout); on the
-     phone that column now renders, so zero the column gap to keep heading ->
-     lists at exactly the old heading gap. */
-  #info-equipment { gap: 0; }
   /* The piano photo FOLLOWS the Equipment list (2026-09-11, was above the
      heading) at the site's standard photo/text gap. */
   .mobile-piano { display: block; margin-top: clamp(36px, 10vw, 56px); }
