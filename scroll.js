@@ -1108,6 +1108,10 @@
     if (window.matchMedia('(max-width: 720px)').matches) return;
     var blocks = document.querySelectorAll('#info-space .lblock');
     if (!blocks.length) return;
+    // The dissolve belongs to the old sticky-card train; under the satspace
+    // model (2026-09-14) the blocks are static inside one pinned column and
+    // simply scroll away at the section's end — no mask.
+    if (getComputedStyle(blocks[0]).position !== 'sticky') return;
     var pin = parseFloat(getComputedStyle(blocks[0]).top) || 162;
     var ticking = false;
     function apply() {

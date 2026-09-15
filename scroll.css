@@ -308,37 +308,21 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
 .plan-block { margin-top: 0; max-width: 500px; }
 .plan-block .floorplan { margin-bottom: 0; }
 @media (min-width: 721px) {
-  /* STICKY-CARD TRAIN. Each left block scrolls up with the page, sticks
-     below the header, and holds while the photos flow — until the NEXT
-     block catches up (the segment runs out) and pushes it off the top.
-     The Space opens alone, centred (the column padding); the floor plan is
-     the last card and holds to the section's end (its segment flexes). */
-  #info-space .main-left-inner {
-    position: static; padding-top: 16vh; box-sizing: border-box;
-    display: flex; flex-direction: column; min-height: 100%;
-  }
-  /* segment SPACING must be content height, not padding: a sticky child is
-     constrained to its containing block's CONTENT box, so padding gives it
-     zero travel and it never pins. min-height = the block + its hold time. */
-  #info-space .lseg { min-height: 92vh; }
-  /* A real gap between consecutive cards (2026-09-14): at the push-off
-     moment the incoming card used to sit flush against the pinned one —
-     "Amenities" touching the last line of copy. The segment margin keeps
-     one section gap between them for the whole hand-over. */
-  /* `~`, not `+`: the phone-only .mob-photos blocks sit BETWEEN the cards in
-     the DOM (display:none on desktop), so an adjacent-sibling selector never
-     matched and the gap silently never applied. */
-  #info-space .lseg ~ .lseg { margin-top: clamp(140px, 24vh, 260px); }   /* generous: "more space between The Space and Amenities" (2026-09-14) */
-  #info-space .lseg .lblock { position: sticky; top: 205px; }
-  /* The LAST card (Amenities) holds to the section's end — it flexes to
-     absorb the right column's extra height instead of un-pinning after a
-     fixed screen-height and leaving a long empty run before Equipment. */
-  #info-space .seg-last { flex: 1 1 auto; }       /* class, not :last-child — a hidden .mob-photos follows it */
-  /* ...and Equipment follows the photos closely, not a full section gap away. */
+  /* SATSPACE MODEL (2026-09-14, desktop only — replaces the sticky-card
+     train; the phone layout is untouched). Exactly what satspace.ltd ships
+     (.sticky-container { position: sticky; top: 200px }): the section's
+     left column is ONE sticky block — heading and text together, compact —
+     that pins below the header while the right-column photos flow past,
+     then DETACHES and scrolls away with the page when the section ends.
+     No segments, no staggered cards, no hand-over. The base rule
+     `.main-left-inner { position: sticky; top: var(--stick) }` already does
+     this; the card-train overrides that fought it are gone. */
+  #info-space .lseg .lblock { position: static; }
+  /* Equipment follows the photos closely, not a full section gap away. */
   #info-space + .main { margin-top: clamp(40px, 7vh, 80px); }
-  #info-space .seg-plan { flex: 1 1 auto; min-height: 0; }
   #info-space .sec-copy p { line-height: 1.65; }
-  #info-space .sec-head-sub { margin-top: 0; }
+  /* Amenities sits inside the same pinned block, one compact gap below the copy. */
+  #info-space .sec-head-sub { margin-top: clamp(36px, 5vh, 56px); }
   #info-space .sec-list {
     display: grid; grid-template-columns: 1fr 1fr;
     column-gap: clamp(18px, 2vw, 30px); max-width: 46ch;
