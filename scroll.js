@@ -870,10 +870,10 @@
     ['Lighting', [
       '2\u00d7 Profoto D2',
       'Profoto Connect Pro (Canon)',
-      'Aputure 300D II',
-      'Aputure Spotlight'
+      'Aputure 300D II'
     ]],
     ['Modifiers & Grip', [
+      'Aputure Spotlight',
       'Profoto RFi 4.0 \u00d7 6.0\u2032 Softbox',
       '6\u00d7 C-Stands'
     ]]
