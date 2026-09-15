@@ -1102,16 +1102,15 @@
       // Phone-only contact card (2026-09-14): the header's address / email /
       // Instagram rows are hidden on phones, so the details live here, below
       // the form, as a boxed block (satspace's Contact card pattern).
+      // Format (owner, 2026-09-14): label / value pairs — Address, Instagram,
+      // Email — one row each, hairlines between.
       '<div class="contact-card" aria-label="Contact details">' +
-        '<div class="cc-row cc-head">Contact</div>' +
-        '<div class="cc-row">' +
-          '<span>1938 W Fairbanks Ave</span>' +
-          '<span>Winter Park, FL 32789</span>' +
-          '<a href="mailto:hello@gardens.studio">hello@gardens.studio</a>' +
-        '</div>' +
-        '<div class="cc-row">' +
-          '<a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>' +
-        '</div>' +
+        '<div class="cc-row"><span class="cc-label">Address</span>' +
+          '<span class="cc-value">1938 W Fairbanks Ave, Winter Park, FL 32789</span></div>' +
+        '<div class="cc-row"><span class="cc-label">Instagram</span>' +
+          '<a class="cc-value" href="https://instagram.com" target="_blank" rel="noopener">@gardens.studio</a></div>' +
+        '<div class="cc-row"><span class="cc-label">Email</span>' +
+          '<a class="cc-value" href="mailto:hello@gardens.studio">hello@gardens.studio</a></div>' +
       '</div>' +
       '<div class="info-foot">' +
         '<span class="foot-mark">Gardens Studio</span>' +
