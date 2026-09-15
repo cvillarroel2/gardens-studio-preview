@@ -335,16 +335,15 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   .sec-head { margin: 0 0 68px; }                     /* title -> body text */
   #info-space .sec-copy { max-width: 46ch; }
   #info-space .sec-copy p { line-height: 1.65; }
-  #info-space .space-intro-wrap { margin-bottom: 43px; }   /* description -> FEATURES */
   /* The Amenities heading and list keep the site's OWN typography and list
      styling (the owner's rule: never change the font). Only satspace's
      block anatomy and spacing are adopted. */
-  #info-space .sec-head-sub { margin: 0 0 var(--gap-head); }
-  #info-space .sec-list {
+  #info-amenities .sec-head-sub { margin: 0 0 var(--gap-head); }
+  #info-amenities .sec-list {
     display: grid; grid-template-columns: 1fr 1fr;
     column-gap: clamp(18px, 2vw, 30px); max-width: 46ch;
   }
-  #info-space .sec-list li { padding-top: 6px; padding-bottom: 6px; }
+  #info-amenities .sec-list li { padding-top: 6px; padding-bottom: 6px; }
 }
 
 /* A quiet flag on content that is not final: placeholder copy / drawings. */
@@ -564,7 +563,11 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   }
   /* On phones the desktop right-column stack hides entirely — the photos
      interleave the left column's text blocks instead (.mob-photos). */
-  #info-space .main-right { display: none; }
+  #info-space .main-right, #info-amenities .main-right { display: none; }
+  /* Amenities is its own section now (desktop motion); on the phone it must
+     sit exactly where it did inside the old merged section — the photo
+     cluster's bottom margin + the sub-heading's top margin, nothing more. */
+  #info-amenities { margin-top: 0; }
   .mob-photos {
     display: flex; flex-direction: column; gap: clamp(24px, 7vw, 38px);
     margin: clamp(36px, 10vw, 56px) 0;

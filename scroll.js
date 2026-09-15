@@ -1025,20 +1025,15 @@
       '<ul class="sec-list">' + FEATURES.map(function (f) {
         return '<li>' + f + '</li>';
       }).join('') + '</ul></div>';
-    // Hand-built section (not section()): the left column is a train of
-    // sticky SEGMENTS. Each block rides up, sticks below the header, and
-    // holds until the next block catches up and pushes it away — The Space,
-    // then Amenities, then the floor plan (which holds to the section's end).
-    var right = rightImages([
-      ['cyclorama', 'the cyc wall', false, 'mob-hide'],   // the phone's full-bleed opener already shows the cove
-      ['lounge-2', 'the lounge'],
-      ['arcade', 'the arcade run'],
-      ['vanity', 'the dressing room'],
-      ['workroom', 'the work area', true]
-    ]);
-    // Phone-only photo clusters interleave the text blocks (the desktop
-    // right-column stack hides on phones): living room + kitchen after The
-    // Space, dressing room + desks after Amenities, before the floor plan.
+    // TWO SECTIONS (2026-09-14, satspace motion): The Space and Amenities are
+    // separate sections, each with its OWN pinned text block and its own
+    // photos — exactly how satspace's South Space / North Space chunks hand
+    // over. One merged block was too tall to pin cleanly on a laptop
+    // viewport (728px tall against ~700px of room), which read as one glued
+    // lump with no motion. The Space rides with the cyc / lounge / arcade
+    // photos; Amenities with the dressing room / work area. On the phone the
+    // desktop stacks hide and the .mob-photos clusters interleave the text
+    // exactly as before (read order and spacing unchanged).
     function mobPhotos(list) {
       return '<div class="mob-photos">' + list.map(function (im) {
         return imgTag(im[0], im[1], true);
@@ -1050,10 +1045,22 @@
           '<header class="sec-head"><h2 class="sec-title">The space</h2></header>' +
           '<div class="space-intro-wrap">' + copy + '</div></div></div>' +
         mobPhotos([['lounge-2', 'the lounge'], ['arcade', 'the kitchen and arcade run']]) +
+      '</div></div>' +
+      rightImages([
+        ['cyclorama', 'the cyc wall', false, 'mob-hide'],   // the phone's full-bleed opener already shows the cove
+        ['lounge-2', 'the lounge'],
+        ['arcade', 'the arcade run']
+      ]) +
+    '</section>' +
+    '<section class="main" id="info-amenities">' +
+      '<div class="main-left"><div class="main-left-inner">' +
         '<div class="lseg seg-last"><div class="lblock">' + amen + '</div></div>' +
         mobPhotos([['vanity', 'the dressing room'], ['workroom', 'the work area']]) +
       '</div></div>' +
-      right +
+      rightImages([
+        ['vanity', 'the dressing room'],
+        ['workroom', 'the work area', true]
+      ]) +
     '</section>';
   }
 
