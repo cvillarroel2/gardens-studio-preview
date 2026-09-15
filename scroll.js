@@ -1050,7 +1050,7 @@
           '<header class="sec-head"><h2 class="sec-title">The space</h2></header>' +
           '<div class="space-intro-wrap">' + copy + '</div></div></div>' +
         mobPhotos([['lounge-2', 'the lounge'], ['arcade', 'the kitchen and arcade run']]) +
-        '<div class="lseg"><div class="lblock">' + amen + '</div></div>' +
+        '<div class="lseg seg-last"><div class="lblock">' + amen + '</div></div>' +
         mobPhotos([['vanity', 'the dressing room'], ['workroom', 'the work area']]) +
       '</div></div>' +
       right +

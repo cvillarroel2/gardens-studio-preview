@@ -325,12 +325,15 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
      moment the incoming card used to sit flush against the pinned one —
      "Amenities" touching the last line of copy. The segment margin keeps
      one section gap between them for the whole hand-over. */
-  #info-space .lseg + .lseg { margin-top: clamp(140px, 24vh, 260px); }   /* generous: "more space between The Space and Amenities" (2026-09-14) */
+  /* `~`, not `+`: the phone-only .mob-photos blocks sit BETWEEN the cards in
+     the DOM (display:none on desktop), so an adjacent-sibling selector never
+     matched and the gap silently never applied. */
+  #info-space .lseg ~ .lseg { margin-top: clamp(140px, 24vh, 260px); }   /* generous: "more space between The Space and Amenities" (2026-09-14) */
   #info-space .lseg .lblock { position: sticky; top: 205px; }
   /* The LAST card (Amenities) holds to the section's end — it flexes to
      absorb the right column's extra height instead of un-pinning after a
      fixed screen-height and leaving a long empty run before Equipment. */
-  #info-space .lseg:last-child { flex: 1 1 auto; }
+  #info-space .seg-last { flex: 1 1 auto; }       /* class, not :last-child — a hidden .mob-photos follows it */
   /* ...and Equipment follows the photos closely, not a full section gap away. */
   #info-space + .main { margin-top: clamp(40px, 7vh, 80px); }
   #info-space .seg-plan { flex: 1 1 auto; min-height: 0; }
