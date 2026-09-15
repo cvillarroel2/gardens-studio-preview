@@ -331,17 +331,15 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   #info-space .sec-copy { max-width: 46ch; }
   #info-space .sec-copy p { line-height: 1.65; }
   #info-space .space-intro-wrap { margin-bottom: 43px; }   /* description -> FEATURES */
-  /* "Amenities" becomes the satspace FEATURES label: small, bold, tracked. */
-  #info-space .sec-head-sub { margin: 0 0 20px; }
-  #info-space .sec-head-sub .sec-title {
-    font: 700 12px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase;
+  /* The Amenities heading and list keep the site's OWN typography and list
+     styling (the owner's rule: never change the font). Only satspace's
+     block anatomy and spacing are adopted. */
+  #info-space .sec-head-sub { margin: 0 0 var(--gap-head); }
+  #info-space .sec-list {
+    display: grid; grid-template-columns: 1fr 1fr;
+    column-gap: clamp(18px, 2vw, 30px); max-width: 46ch;
   }
-  /* ...and the list is plain lines, exactly like their features paragraph. */
-  #info-space .sec-list { display: block; margin: 0; max-width: 46ch; }
-  #info-space .sec-list li {
-    display: block; border: 0; padding: 2px 0; font: 400 15px/1.65 var(--mono);
-  }
-  #info-space .sec-list li:first-child { border-top: 0; }
+  #info-space .sec-list li { padding-top: 6px; padding-bottom: 6px; }
 }
 
 /* A quiet flag on content that is not final: placeholder copy / drawings. */
