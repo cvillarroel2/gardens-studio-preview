@@ -564,6 +564,14 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   /* On phones the desktop right-column stack hides entirely — the photos
      interleave the left column's text blocks instead (.mob-photos). */
   .sec-list li::before { content: none; }         /* no poppy dots on the phone list (2026-09-14) */
+  /* One list convention on the phone (2026-09-14): the Equipment items take
+     the Amenities items' size, colour, row height and hairlines — they were
+     smaller, greyer and tighter. Category labels (h3) stay as they are. */
+  .kit-cat li {
+    padding: 13px 2px; font: 400 14px/1.55 var(--mono); color: var(--ink);
+    border-bottom: 1px solid var(--hair-2);
+  }
+  .kit-cat li:last-child { border-bottom: 1px solid var(--hair-2); }
   #info-space .main-right, #info-amenities .main-right { display: none; }
   /* Amenities is its own section now (desktop motion); on the phone it must
      sit exactly where it did inside the old merged section — the photo
