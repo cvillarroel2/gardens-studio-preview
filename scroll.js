@@ -1067,9 +1067,14 @@
       return '<div class="kit-cat"><h3>' + c[0] + '</h3><ul>' +
         c[1].map(function (i) { return '<li>' + i + '</li>'; }).join('') + '</ul></div>';
     }).join('') + '</div>';
-    var right = '<div class="main-right equip-photo">' +
-      imgTag('piano-hall', 'the working end and the grand piano') + '</div>';
-    return section('info-equipment', '04', 'Equipment', grid, right);
+    // Satspace layout (2026-09-14): the sticky LEFT column holds only the
+    // heading; the kit lists live in the RIGHT column (then the piano). On
+    // phones the right column stacks under the heading, so the read order
+    // (heading -> lists -> piano) is unchanged; only the desktop-hidden
+    // photo carries .equip-photo now.
+    var right = '<div class="main-right">' + grid +
+      imgTag('piano-hall', 'the working end and the grand piano', false, 'equip-photo') + '</div>';
+    return section('info-equipment', '04', 'Equipment', '', right);
   }
 
   // 05 CONTACT — a full-width close: the contact grid, CTAs, the design-study

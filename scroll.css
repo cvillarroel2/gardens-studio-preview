@@ -308,26 +308,40 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
 .plan-block { margin-top: 0; max-width: 500px; }
 .plan-block .floorplan { margin-bottom: 0; }
 @media (min-width: 721px) {
-  /* SATSPACE MODEL (2026-09-14, desktop only — replaces the sticky-card
-     train; the phone layout is untouched). Exactly what satspace.ltd ships
-     (.sticky-container { position: sticky; top: 200px }): the section's
-     left column is ONE sticky block — heading and text together, compact —
-     that pins below the header while the right-column photos flow past,
-     then DETACHES and scrolls away with the page when the section ends.
-     No segments, no staggered cards, no hand-over. The base rule
-     `.main-left-inner { position: sticky; top: var(--stick) }` already does
-     this; the card-train overrides that fought it are gone. */
+  /* SATSPACE SIDE-TEXT MODEL (2026-09-14, desktop only — the phone layout is
+     untouched). Transcribed from satspace.ltd's shipped Webflow CSS, all of
+     it, not just the sticky rule:
+       .sticky-container  { position: sticky; top: 200px }  — ONE block per
+         section: heading + description + "FEATURES:" label + plain line
+         list, pinned while the right-column images flow, DETACHING when the
+         section ends (no card train, no hand-over).
+       .heading           { margin-bottom: 68px }
+       .studio-description{ margin-bottom: 43px; narrow column }
+       .features          { small bold label; margin-bottom: 20px }
+       features list      = plain lines: no bullets, no rules, no columns
+       .image-container   { flex column; gap: 30px }
+       sections           { display: flex; margin-top: 40px }
+       equipment          = sticky heading on the left, lists on the right.
+     The base `.main-left-inner { position: sticky; top: var(--stick) }` is
+     the sticky-container; the old card-train overrides are gone. */
   #info-space .lseg .lblock { position: static; }
-  /* Equipment follows the photos closely, not a full section gap away. */
-  #info-space + .main { margin-top: clamp(40px, 7vh, 80px); }
+  .main + .main { margin-top: 40px; }                 /* sections 40px apart */
+  .main-right { gap: 30px; }                          /* images 30px apart */
+  .sec-head { margin: 0 0 68px; }                     /* heading -> text */
+  #info-space .sec-copy { max-width: 46ch; }
   #info-space .sec-copy p { line-height: 1.65; }
-  /* Amenities sits inside the same pinned block, one compact gap below the copy. */
-  #info-space .sec-head-sub { margin-top: clamp(36px, 5vh, 56px); }
-  #info-space .sec-list {
-    display: grid; grid-template-columns: 1fr 1fr;
-    column-gap: clamp(18px, 2vw, 30px); max-width: 46ch;
+  #info-space .space-intro-wrap { margin-bottom: 43px; }   /* description -> FEATURES */
+  /* "Amenities" becomes the satspace FEATURES label: small, bold, tracked. */
+  #info-space .sec-head-sub { margin: 0 0 20px; }
+  #info-space .sec-head-sub .sec-title {
+    font: 700 12px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase;
   }
-  #info-space .sec-list li { padding-top: 6px; padding-bottom: 6px; }
+  /* ...and the list is plain lines, exactly like their features paragraph. */
+  #info-space .sec-list { display: block; margin: 0; max-width: 46ch; }
+  #info-space .sec-list li {
+    display: block; border: 0; padding: 2px 0; font: 400 15px/1.65 var(--mono);
+  }
+  #info-space .sec-list li:first-child { border-top: 0; }
 }
 
 /* A quiet flag on content that is not final: placeholder copy / drawings. */
@@ -556,6 +570,10 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   /* The piano sits immediately above the Equipment heading (its desktop
      home inside the kit column hides here so it never shows twice). */
   .equip-photo { display: none; }
+  /* The kit lists moved to the right column (desktop satspace layout); on the
+     phone that column now renders, so zero the column gap to keep heading ->
+     lists at exactly the old heading gap. */
+  #info-equipment { gap: 0; }
   /* The piano photo FOLLOWS the Equipment list (2026-09-11, was above the
      heading) at the site's standard photo/text gap. */
   .mobile-piano { display: block; margin-top: clamp(36px, 10vw, 56px); }
