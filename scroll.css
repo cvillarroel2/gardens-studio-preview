@@ -36,6 +36,14 @@ html, body { overflow-x: clip; }
   --gutter: clamp(18px, 4vw, 52px);
   --ease:  cubic-bezier(.22, .61, .36, 1);
   --stick: clamp(172px, 22vh, 216px);      /* sticky-left offset — clears the STICKY header band */
+  /* SPACING SCALE (2026-09-14) — every vertical gap between text blocks and
+     photos derives from these three, so the page has one rhythm:
+       --gap-head     heading -> its body (copy, list, grid, form)
+       --gap-photo    text <-> photo, photo <-> photo
+       --gap-section  between sections / before a new heading            */
+  --gap-head:    clamp(18px, 2.2vw, 30px);
+  --gap-photo:   clamp(56px, 6vw, 100px);
+  --gap-section: clamp(64px, 11vh, 132px);
 }
 
 * { box-sizing: border-box; }
@@ -262,12 +270,12 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   display: flex; align-items: stretch;              /* left stretches so its inner can pin */
   gap: clamp(30px, 5vw, 90px);
 }
-.main + .main { margin-top: clamp(64px, 11vh, 132px); }
+.main + .main { margin-top: var(--gap-section); }
 
 .main-left { flex: 1 1 50%; min-width: 0; }
 .main-left-inner { position: sticky; top: var(--stick); }
 
-.sec-head { display: flex; align-items: baseline; gap: 16px; margin: 0 0 clamp(18px, 2.2vw, 30px); }
+.sec-head { display: flex; align-items: baseline; gap: 16px; margin: 0 0 var(--gap-head); }
 .sec-idx { flex: 0 0 auto; font: 400 11px/1 var(--mono); letter-spacing: 0.2em; color: var(--poppy); }
 .sec-title {
   font-family: var(--serif); font-weight: 300;
@@ -282,7 +290,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
 
 /* RIGHT column — a plain flex column of FULL-SIZE, uncropped images at their
    natural aspect ratio. No object-fit, no fixed-height frames, no cross-fade. */
-.main-right { flex: 1 1 50%; min-width: 0; display: flex; flex-direction: column; gap: clamp(56px, 6vw, 100px); }
+.main-right { flex: 1 1 50%; min-width: 0; display: flex; flex-direction: column; gap: var(--gap-photo); }
 .main-right img {
   display: block; width: 100%; max-width: 100%; height: auto;
   background: var(--paper-2);
@@ -402,7 +410,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
 .fp-legend .sw.pop { border-top-color: var(--poppy); }
 
 /* ---- Contact — a full-width close below the sectioned area ---- */
-.info-contact { margin-top: clamp(72px, 11vh, 140px); }
+.info-contact { margin-top: var(--gap-section); }
 
 /* Write to the studio — the 05 section IS this form. High contrast, extremely
    legible: bold ink labels, full 1px-ink boxed fields on warm white (not faint
@@ -498,7 +506,19 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   /* Sections stack to one column: the left text, then its full-size images (still
      uncropped, natural aspect). No pinning — a simple stacked read. */
   .main { flex-direction: column; gap: clamp(20px, 6vw, 30px); }
-  .main + .main { margin-top: clamp(48px, 13vw, 78px); }
+  /* Phone spacing scale — the same three tokens, cut for a narrow column.
+     Gaps NEVER stack: a photo owns only its top gap, and whatever follows it
+     (a heading block or a new section) owns the section gap. */
+  :root {
+    --gap-head:    18px;
+    --gap-photo:   clamp(36px, 10vw, 56px);
+    --gap-section: clamp(56px, 14vw, 84px);
+  }
+  .sec-head-sub { margin-top: 0; }               /* a preceding photo/segment owns the gap */
+  .sec-list { margin-top: 0; }                    /* heading -> list = --gap-head, like copy */
+  .contact-form-wrap { margin-top: var(--gap-head); }
+  .mob-photos + .lseg { margin-top: var(--gap-section); }
+  .main + .main { margin-top: var(--gap-section); }
   .main-left, .main-right { flex: 1 1 auto; width: 100%; }
   .main-left-inner { position: static; }
   .sec-copy, .sec-list { max-width: none; }
@@ -522,7 +542,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
        climbs into the clear ground beneath it. 20dvh leaves the title sitting
        ~a photo-gap (≈50-65px) below the image at the stop, matching the
        site's photo/text rhythm (clamp(36px, 10vw, 56px)). */
-    margin: calc(0px - clamp(46px, 8vh, 96px)) 0 calc(clamp(48px, 13vw, 78px) - 20dvh)
+    margin: calc(0px - clamp(46px, 8vh, 96px)) 0 calc(var(--gap-section) - 20dvh)
             calc(50% - 50vw);
   }
   .mobile-hero-cyc .cyc-stage {
@@ -540,7 +560,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   #info-space .main-right { display: none; }
   .mob-photos {
     display: flex; flex-direction: column; gap: clamp(24px, 7vw, 38px);
-    margin: clamp(36px, 10vw, 56px) 0;
+    margin: var(--gap-photo) 0 0;                 /* top only — the follower owns its gap */
   }
   .mob-photos img { width: 100%; height: auto; display: block; }
   /* The piano sits immediately above the Equipment heading (its desktop
@@ -548,7 +568,7 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
   .equip-photo { display: none; }
   /* The piano photo FOLLOWS the Equipment list (2026-09-11, was above the
      heading) at the site's standard photo/text gap. */
-  .mobile-piano { display: block; margin-top: clamp(36px, 10vw, 56px); }
+  .mobile-piano { display: block; margin-top: var(--gap-photo); }
   .mobile-piano img { width: 100%; height: auto; display: block; }
 
 }
