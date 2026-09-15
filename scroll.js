@@ -1099,6 +1099,20 @@
           '<button class="send" type="submit">Send it <span class="arr" aria-hidden="true">&rarr;</span></button>' +
         '</form>' +
       '</div>' +
+      // Phone-only contact card (2026-09-14): the header's address / email /
+      // Instagram rows are hidden on phones, so the details live here, below
+      // the form, as a boxed block (satspace's Contact card pattern).
+      '<div class="contact-card" aria-label="Contact details">' +
+        '<div class="cc-row cc-head">Contact</div>' +
+        '<div class="cc-row">' +
+          '<span>1938 W Fairbanks Ave</span>' +
+          '<span>Winter Park, FL 32789</span>' +
+          '<a href="mailto:hello@gardens.studio">hello@gardens.studio</a>' +
+        '</div>' +
+        '<div class="cc-row">' +
+          '<a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>' +
+        '</div>' +
+      '</div>' +
       '<div class="info-foot">' +
         '<span class="foot-mark">Gardens Studio</span>' +
         '<a class="to-top" href="#top" id="toTop">Back to the top <span class="arr" aria-hidden="true">&uarr;</span></a>' +
