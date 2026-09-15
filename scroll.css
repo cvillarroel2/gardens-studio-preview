@@ -568,10 +568,14 @@ body.revealed .info-body { opacity: 1; pointer-events: auto; transition-delay: 0
      the Amenities items' size, colour, row height and hairlines — they were
      smaller, greyer and tighter. Category labels (h3) stay as they are. */
   .kit-cat li {
-    padding: 13px 2px; font: 400 14px/1.55 var(--mono); color: var(--ink);
+    padding: 10px 2px; font: 400 14px/1.55 var(--mono); color: var(--ink);   /* items within a group sit a little closer */
     border-bottom: 1px solid var(--hair-2);
   }
   .kit-cat li:last-child { border-bottom: 1px solid var(--hair-2); }
+  /* Equipment rhythm on the phone (2026-09-14): a clearer break between one
+     group and the next, and more air between the heading and the first group. */
+  #info-equipment .kit-grid { gap: 44px; }
+  #info-equipment .sec-head { margin-bottom: 34px; }
   #info-space .main-right, #info-amenities .main-right { display: none; }
   /* Amenities is its own section now (desktop motion); on the phone it must
      sit exactly where it did inside the old merged section — the photo
